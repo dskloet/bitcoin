@@ -5,6 +5,7 @@ import (
   "crypto/sha256"
   "encoding/json"
 	"fmt"
+  "math"
   "net/http"
   "net/url"
   "strconv"
@@ -120,6 +121,11 @@ func (result ApiResult) get(name string) float64 {
   return value;
 }
 
+func feeRound(x, feeRate float64) float64 {
+  fee := math.Ceil(x * feeRate * 100)
+  return fee / (feeRate * 100);
+}
+
 func main() {
   openOrders, err := requestOrders()
   if err != nil {
@@ -155,8 +161,10 @@ func main() {
   highRate := previousRate * s
   lowRate := previousRate / s
 
-  highX := (b * highRate - R * A) / (1 + R + R * F) * (1 + F)
-  lowX := (R * A - b * lowRate) / (1 + R + R * F)
+  lowX := feeRound((R * A - b * lowRate) / (1 + R + R * F), F)
+  highX := feeRound((b * highRate - R * A) / (1 + R + R * F) * (1 + F), F)
+  lowRate = (((A - lowX * (1 + F)) * R) - lowX) / b
+  highRate = (((A + highX * (1 - F)) * R) + highX) / b
   buy := lowX / lowRate
   sell := highX / highRate
 
