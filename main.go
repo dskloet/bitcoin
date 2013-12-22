@@ -11,8 +11,6 @@ import (
   "net/url"
   "strconv"
   "time"
-  "io"
-  "os"
 )
 
 const (
@@ -85,7 +83,6 @@ func requestOrders() (result []Order, err error) {
   }
   defer resp.Body.Close()
 
-  //io.Copy(os.Stdout, resp.Body)
   jsonDecoder := json.NewDecoder(resp.Body)
   err = jsonDecoder.Decode(&result)
   return
@@ -95,7 +92,9 @@ func cancelOrder(order Order) (err error) {
   params := createParams()
   params["id"] = []string{ fmt.Sprintf("%d", order.Id) }
   resp, err := postRequest(API_CANCEL_ORDER, params)
-  io.Copy(os.Stdout, resp.Body)
+  if err == nil {
+    resp.Body.Close()
+  }
   return
 }
 
@@ -103,9 +102,7 @@ func buyOrder(amount, price float64) (err error) {
   params := createParams()
   params["amount"] = []string{ fmt.Sprintf("%.8f", amount) }
   params["price"] = []string{ fmt.Sprintf("%.2f", price) }
-  //fmt.Printf("buy %v\n", params)
   _, err = postRequest(API_BUY, params)
-  //io.Copy(os.Stdout, resp.Body)
   return
 }
 
@@ -113,9 +110,7 @@ func sellOrder(amount, price float64) (err error) {
   params := createParams()
   params["amount"] = []string{ fmt.Sprintf("%.8f", amount) }
   params["price"] = []string{ fmt.Sprintf("%.2f", price) }
-  //fmt.Printf("sell %v\n", params)
   _, err = postRequest(API_SELL, params)
-  //io.Copy(os.Stdout, resp.Body)
   return
 }
 
@@ -179,10 +174,11 @@ func main() {
   buy := lowX / lowRate
   sell := highX / highRate
 
-  fmt.Printf("A = %v\n", A)
-  fmt.Printf("b = %v\n", b)
-  fmt.Printf("F = %v\n", F)
-  fmt.Printf("E = %v %v %v\n", lowRate, previousRate, highRate)
+  fmt.Printf("Creating new bitstamp orders.\n")
+  fmt.Printf("USD = %v\n", A)
+  fmt.Printf("BTC = %v\n", b)
+  fmt.Printf("Fee = %v\n", F)
+  fmt.Printf("Rate = %.2f\n", previousRate)
   fmt.Printf("Buy %.8f at %.2f for %.2f\n", buy, lowRate, lowX)
   fmt.Printf("Sell %.8f at %.2f for %.2f\n", sell, highRate, highX)
 
