@@ -9,14 +9,9 @@ import (
   "math"
   "net/http"
   "net/url"
+  "os"
   "strconv"
   "time"
-)
-
-const (
-  API_KEY = "ApdUHqBY8xTqf2Wf9xcVvTydrRdrBmWS"
-  API_SECRET = "AjGI8l3KlYyFmpZTUHWZQT7bgVTLhU3Z"
-  CLIENT_ID = "86529"
 )
 
 const (
@@ -33,6 +28,9 @@ const (
 )
 
 var flagTest bool
+var flagClientId string
+var flagApiKey string
+var flagApiSecret string
 
 type ApiResult map[string]interface{}
 
@@ -45,15 +43,14 @@ var now int64 = time.Now().Unix()
 func createParams() (params url.Values) {
   nonce := fmt.Sprintf("%v", now)
   now++
-  message := nonce + CLIENT_ID + API_KEY
-  mac := hmac.New(sha256.New, []byte(API_SECRET))
+  message := nonce + flagClientId + flagApiKey
+  mac := hmac.New(sha256.New, []byte(flagApiSecret))
   mac.Write([]byte(message))
 
   params = make(url.Values)
-  params["key"] = []string{ API_KEY }
+  params["key"] = []string{ flagApiKey }
   params["nonce"] = []string{ nonce }
   params["signature"] = []string{ fmt.Sprintf("%X", mac.Sum(nil)) }
-  //fmt.Printf("params = %s\n", params);
   return
 }
 
@@ -116,17 +113,25 @@ func sellOrder(amount, price float64) (err error) {
 
 func (result ApiResult) get(name string) float64 {
   value, _ := strconv.ParseFloat(result[name].(string), 64)
-  return value;
+  return value
 }
 
 func feeRound(x, feeRate float64) float64 {
   fee := math.Ceil(x * feeRate * 100)
-  return fee / (feeRate * 100);
+  return fee / (feeRate * 100)
 }
 
 func initFlags() {
   flag.BoolVar(&flagTest, "test", false, "Don't change any orders. Just output.")
-  flag.Parse();
+  flag.StringVar(&flagApiKey, "api_key", "", "Bitstamp API key")
+  flag.StringVar(&flagApiSecret, "api_secret", "", "Bitstamp API secret")
+  flag.StringVar(&flagClientId, "client_id", "", "Bitstamp client ID")
+  flag.Parse()
+
+  if flagApiKey == "" || flagApiSecret == "" || flagClientId == "" {
+    fmt.Printf("--api_key, --api_secret, --client_id must all be specified\n")
+    os.Exit(1)
+  }
 }
 
 func main() {
@@ -182,7 +187,9 @@ func main() {
   fmt.Printf("Buy %.8f at %.2f for %.2f\n", buy, lowRate, lowX)
   fmt.Printf("Sell %.8f at %.2f for %.2f\n", sell, highRate, highX)
 
-  if !flagTest {
+  if flagTest {
+    fmt.Printf("Skipped creating orders.\n")
+  } else {
     buyOrder(buy, lowRate)
     if err != nil {
       fmt.Printf("Error buy: %v\n", err)
