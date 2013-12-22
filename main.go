@@ -4,6 +4,7 @@ import (
   "crypto/hmac"
   "crypto/sha256"
   "encoding/json"
+  "flag"
 	"fmt"
   "math"
   "net/http"
@@ -15,8 +16,8 @@ import (
 )
 
 const (
-  API_KEY = "jdAfYqOa1s2VAzlFH8MS1L7IUnk3dOLw"
-  API_SECRET = "yA2Wy0JmbjUas6y9KpCukj0TdMMX7oKL"
+  API_KEY = "ApdUHqBY8xTqf2Wf9xcVvTydrRdrBmWS"
+  API_SECRET = "AjGI8l3KlYyFmpZTUHWZQT7bgVTLhU3Z"
   CLIENT_ID = "86529"
 )
 
@@ -32,6 +33,8 @@ const (
     BTC_BALANCE = "btc_balance"
     FEE = "fee"
 )
+
+var flagTest bool
 
 type ApiResult map[string]interface{}
 
@@ -126,23 +129,31 @@ func feeRound(x, feeRate float64) float64 {
   return fee / (feeRate * 100);
 }
 
+func initFlags() {
+  flag.BoolVar(&flagTest, "test", false, "Don't change any orders. Just output.")
+  flag.Parse();
+}
+
 func main() {
+  initFlags()
+
   openOrders, err := requestOrders()
   if err != nil {
     fmt.Printf("Error open orders: %v\n", err)
     return
   }
-  if len(openOrders) == 2 {
-    fmt.Printf(".")
-    return
-  }
-  fmt.Printf("\n")
-
-  if len(openOrders) == 1 {
-    cancelOrder(openOrders[0])
-    if err != nil {
-      fmt.Printf("Error cancel order: %v\n", err)
+  if flagTest {
+    fmt.Printf("%v open orders\n", len(openOrders))
+  } else {
+    if len(openOrders) == 2 {
       return
+    }
+    if len(openOrders) == 1 {
+      cancelOrder(openOrders[0])
+      if err != nil {
+        fmt.Printf("Error cancel order: %v\n", err)
+        return
+      }
     }
   }
 
@@ -155,7 +166,7 @@ func main() {
   b := balance.get(BTC_BALANCE)
   R := 0.25
   F := balance.get(FEE) / 100
-  s := 1.03
+  s := 1.02
 
   previousRate := R*A / b
   highRate := previousRate * s
@@ -175,14 +186,16 @@ func main() {
   fmt.Printf("Buy %.8f at %.2f for %.2f\n", buy, lowRate, lowX)
   fmt.Printf("Sell %.8f at %.2f for %.2f\n", sell, highRate, highX)
 
-  buyOrder(buy, lowRate)
-  if err != nil {
-    fmt.Printf("Error buy: %v\n", err)
-    return
-  }
-  sellOrder(sell, highRate)
-  if err != nil {
-    fmt.Printf("Error sell: %v\n", err)
-    return
+  if !flagTest {
+    buyOrder(buy, lowRate)
+    if err != nil {
+      fmt.Printf("Error buy: %v\n", err)
+      return
+    }
+    sellOrder(sell, highRate)
+    if err != nil {
+      fmt.Printf("Error sell: %v\n", err)
+      return
+    }
   }
 }
