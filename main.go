@@ -31,6 +31,7 @@ var flagTest bool
 var flagClientId string
 var flagApiKey string
 var flagApiSecret string
+var flagSpread float64
 
 type ApiResult map[string]interface{}
 
@@ -126,6 +127,8 @@ func initFlags() {
   flag.StringVar(&flagApiKey, "api_key", "", "Bitstamp API key")
   flag.StringVar(&flagApiSecret, "api_secret", "", "Bitstamp API secret")
   flag.StringVar(&flagClientId, "client_id", "", "Bitstamp client ID")
+  flag.Float64Var(
+      &flagSpread, "spread", 2.0, "Percentage distance between buy/sell price")
   flag.Parse()
 
   if flagApiKey == "" || flagApiSecret == "" || flagClientId == "" {
@@ -166,7 +169,7 @@ func main() {
   b := balance.get(BTC_BALANCE)
   R := 0.25
   F := balance.get(FEE) / 100
-  s := 1.02
+  s := 1 + (flagSpread / 100)
 
   previousRate := R*A / b
   highRate := previousRate * s
