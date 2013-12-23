@@ -172,6 +172,12 @@ func main() {
   b := balance.get(BTC_BALANCE)
   R := flagBtcRatio / (1 - flagBtcRatio)
   F := balance.get(FEE) / 100
+  if flagSpread < 200 * F {
+    fmt.Printf(
+        "spread (%.2f%%) must be at least twice the fee (%.2f%%) " +
+        "not to make a loss.\n", flagSpread, 100 * F)
+    return
+  }
   s := 1 + (flagSpread / 100)
 
   previousRate := R*A / b
