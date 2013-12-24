@@ -1,4 +1,4 @@
-package bitstamp
+package main
 
 import (
   "crypto/hmac"
@@ -30,6 +30,9 @@ type ApiResult map[string]interface{}
 
 type Order struct {
   Id int64
+  Type int
+  Price string
+  Amount string
 }
 
 var now int64 = time.Now().Unix()

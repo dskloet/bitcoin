@@ -1,4 +1,4 @@
-package bitstamp
+package main
 
 import (
 	"fmt"
@@ -65,7 +65,10 @@ func main() {
     return
   }
   if flagTest {
-    fmt.Printf("%v open orders\n", len(openOrders))
+    fmt.Printf("%v open orders:\n", len(openOrders))
+    for _, order := range openOrders {
+      fmt.Printf("%v\n", order)
+    }
   } else {
     if len(openOrders) == 4 {
       return

@@ -1,4 +1,4 @@
-package bitstamp
+package main
 
 import (
   "flag"
