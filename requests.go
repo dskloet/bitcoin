@@ -28,11 +28,24 @@ const (
 
 type ApiResult map[string]interface{}
 
+const (
+    ORDER_BUY = 0
+    ORDER_SELL = 1
+)
+
+const (
+    ORDER_REMOVE = iota
+    ORDER_KEEP = iota
+    ORDER_NEW = iota
+)
+
 type Order struct {
   Id int64
   Type int
   Price string
   Amount string
+  status int
+  value string
 }
 
 var now int64 = time.Now().Unix()
@@ -69,7 +82,7 @@ func requestMap(path string) (result ApiResult, err error) {
   return
 }
 
-func requestOrders() (result []Order, err error) {
+func requestOrders() (result []*Order, err error) {
   params := createParams()
   resp, err := postRequest(API_OPEN_ORDERS, params)
   if err != nil {
@@ -83,8 +96,8 @@ func requestOrders() (result []Order, err error) {
 }
 
 func cancelOrder(order Order) (err error) {
+  fmt.Printf("Cancel order %v\n", order.Desc())
   if flagTest {
-    fmt.Printf("Cancel order %v\n", order)
     fmt.Printf("Skipped\n");
     return
   }
@@ -93,6 +106,23 @@ func cancelOrder(order Order) (err error) {
   resp, err := postRequest(API_CANCEL_ORDER, params)
   if err == nil {
     resp.Body.Close()
+  }
+  return
+}
+
+func requestOrder(order Order) (err error) {
+  fmt.Printf("%v\n", order.Desc())
+  if flagTest {
+    fmt.Printf("Skipped\n")
+    return
+  }
+  params := createParams()
+  params["amount"] = []string{ order.Amount }
+  params["price"] = []string{ order.Price }
+  if order.Type == ORDER_BUY {
+    _, err = postRequest(API_BUY, params)
+  } else if order.Type == ORDER_SELL {
+    _, err = postRequest(API_SELL, params)
   }
   return
 }
@@ -126,4 +156,55 @@ func requestSellOrder(amount, price float64) (err error) {
 func (result ApiResult) get(name string) float64 {
   value, _ := strconv.ParseFloat(result[name].(string), 64)
   return value
+}
+
+func NewOrder(orderType int, amount, price float64) *Order {
+  return &Order{
+    Type: orderType,
+    Amount: fmt.Sprintf("%.8f", amount),
+    Price: fmt.Sprintf("%.2f", price),
+    value: fmt.Sprintf("%.2f", price),
+  }
+}
+
+func NewBuyOrder(amount, price float64) *Order {
+  return NewOrder(ORDER_BUY, amount, price)
+}
+
+func NewSellOrder(amount, price float64) *Order {
+  return NewOrder(ORDER_SELL, amount, price)
+}
+
+func (order Order) Verb() string {
+  if order.Type == ORDER_BUY {
+    return "Buy"
+  } else {
+    return "Sell"
+  }
+}
+
+func (order Order) String() string {
+  return fmt.Sprintf("%v:%v:%v", order.Verb(), order.Amount, order.Price)
+}
+
+func (order Order) Desc() string {
+  desc := fmt.Sprintf(
+      "%v %v at %v",
+      order.Verb(),
+      order.Amount,
+      order.Price)
+  if order.value != "" {
+    desc += " for " + order.value
+  }
+  return desc
+}
+
+func (order Order) Execute() (err error) {
+  if order.status == ORDER_KEEP {
+    return
+  }
+  if order.status == ORDER_REMOVE {
+    return cancelOrder(order)
+  }
+  return requestOrder(order)
 }

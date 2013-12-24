@@ -5,6 +5,19 @@ import (
   "math"
 )
 
+type OrderMap map[string]*Order
+
+func (orderMap OrderMap) add(order *Order) {
+  str := order.String()
+  existing, ok := orderMap[str]
+  if ok {
+    existing.status = ORDER_KEEP
+  } else {
+    order.status = ORDER_NEW
+    orderMap[str] = order
+  }
+}
+
 func computeBuyOrder(A, b, R, F, s float64) (amount, price float64) {
   previousRate := R*A / b
   lowRate := previousRate / s
@@ -14,17 +27,15 @@ func computeBuyOrder(A, b, R, F, s float64) (amount, price float64) {
   return buy, lowRate
 }
 
-func placeBuyOrders(A, b, R, F, s float64) (err error) {
+func placeBuyOrders(A, b, R, F, s float64, orderMap OrderMap) (err error) {
   amount, price := computeBuyOrder(A, b, R, F, s)
-  err = requestBuyOrder(amount, price)
-  if err != nil {
-    return
-  }
+  orderMap.add(NewBuyOrder(amount, price))
+
   cost := amount * price * (1 + F)
   A -= cost
   b += amount
   amount, price = computeBuyOrder(A, b, R, F, s)
-  err = requestBuyOrder(amount, price)
+  orderMap.add(NewBuyOrder(amount, price))
   return
 }
 
@@ -37,17 +48,15 @@ func computeSellOrder(A, b, R, F, s float64) (amount, price float64) {
   return sell, highRate
 }
 
-func placeSellOrders(A, b, R, F, s float64) (err error) {
+func placeSellOrders(A, b, R, F, s float64, orderMap OrderMap) (err error) {
   amount, price := computeSellOrder(A, b, R, F, s)
-  err = requestSellOrder(amount, price)
-  if err != nil {
-    return
-  }
+  orderMap.add(NewSellOrder(amount, price))
+
   gain := amount * price * (1 - F)
   A += gain
   b -= amount
   amount, price = computeSellOrder(A, b, R, F, s)
-  err = requestSellOrder(amount, price)
+  orderMap.add(NewSellOrder(amount, price))
   return
 }
 
@@ -74,14 +83,9 @@ func main() {
       return
     }
   }
-  if len(openOrders) != 4 {
-    for _, order := range openOrders {
-      err = cancelOrder(order)
-      if err != nil {
-        fmt.Printf("Error cancel order: %v\n", err)
-        return
-      }
-    }
+  orderMap := make(map[string]*Order)
+  for _, order := range openOrders {
+    orderMap[order.String()] = order
   }
 
   balance, err := requestMap(API_BALANCE)
@@ -109,15 +113,13 @@ func main() {
   fmt.Printf("Fee = %v\n", F)
   fmt.Printf("Rate = %.2f\n", previousRate)
 
-  err = placeBuyOrders(A, b, R, F, s)
-  if err != nil {
-    fmt.Printf("Error buy: %v\n", err)
-    return
-  }
+  placeBuyOrders(A, b, R, F, s, orderMap)
+  placeSellOrders(A, b, R, F, s, orderMap)
 
-  err = placeSellOrders(A, b, R, F, s)
-  if err != nil {
-    fmt.Printf("Error sell: %v\n", err)
-    return
+  for _, order := range orderMap {
+    err := order.Execute()
+    if err != nil {
+      fmt.Printf("Error executing order: %v\n", order)
+    }
   }
 }
