@@ -163,7 +163,7 @@ func NewOrder(orderType int, amount, price float64) *Order {
     Type: orderType,
     Amount: fmt.Sprintf("%.8f", amount),
     Price: fmt.Sprintf("%.2f", price),
-    value: fmt.Sprintf("%.2f", price),
+    value: fmt.Sprintf("%.2f", price * amount),
   }
 }
 
