@@ -88,6 +88,11 @@ func requestOrders() (result []Order, err error) {
 }
 
 func cancelOrder(order Order) (err error) {
+  if flagTest {
+    fmt.Printf("Cancel order %v\n", order)
+    fmt.Printf("Skipped\n");
+    return
+  }
   params := createParams()
   params["id"] = []string{ fmt.Sprintf("%d", order.Id) }
   resp, err := postRequest(API_CANCEL_ORDER, params)
@@ -97,7 +102,12 @@ func cancelOrder(order Order) (err error) {
   return
 }
 
-func buyOrder(amount, price float64) (err error) {
+func requestBuyOrder(amount, price float64) (err error) {
+  fmt.Printf("Buy %.8f at %.2f for %.2f\n", amount, price, amount * price)
+  if flagTest {
+    fmt.Printf("Skipped\n")
+    return
+  }
   params := createParams()
   params["amount"] = []string{ fmt.Sprintf("%.8f", amount) }
   params["price"] = []string{ fmt.Sprintf("%.2f", price) }
@@ -105,11 +115,62 @@ func buyOrder(amount, price float64) (err error) {
   return
 }
 
-func sellOrder(amount, price float64) (err error) {
+func computeBuyOrder(A, b, R, F, s float64) (amount, price float64) {
+  previousRate := R*A / b
+  lowRate := previousRate / s
+  lowX := feeRound((R * A - b * lowRate) / (1 + R + R * F), F)
+  lowRate = (((A - lowX * (1 + F)) * R) - lowX) / b
+  buy := lowX / lowRate
+  return buy, lowRate
+}
+
+func placeBuyOrders(A, b, R, F, s float64) (err error) {
+  amount, price := computeBuyOrder(A, b, R, F, s)
+  err = requestBuyOrder(amount, price)
+  if err != nil {
+    return
+  }
+  cost := amount * price * (1 + F)
+  A -= cost
+  b += amount
+  amount, price = computeBuyOrder(A, b, R, F, s)
+  err = requestBuyOrder(amount, price)
+  return
+}
+
+func requestSellOrder(amount, price float64) (err error) {
+  fmt.Printf("Sell %.8f at %.2f for %.2f\n", amount, price, amount * price)
+  if flagTest {
+    fmt.Printf("Skipped\n")
+    return
+  }
   params := createParams()
   params["amount"] = []string{ fmt.Sprintf("%.8f", amount) }
   params["price"] = []string{ fmt.Sprintf("%.2f", price) }
   _, err = postRequest(API_SELL, params)
+  return
+}
+
+func computeSellOrder(A, b, R, F, s float64) (amount, price float64) {
+  previousRate := R*A / b
+  highRate := previousRate * s
+  highX := feeRound((b * highRate - R * A) / (1 + R + R * F) * (1 + F), F)
+  highRate = (((A + highX * (1 - F)) * R) + highX) / b
+  sell := highX / highRate
+  return sell, highRate
+}
+
+func placeSellOrders(A, b, R, F, s float64) (err error) {
+  amount, price := computeSellOrder(A, b, R, F, s)
+  err = requestSellOrder(amount, price)
+  if err != nil {
+    return
+  }
+  gain := amount * price * (1 - F)
+  A += gain
+  b -= amount
+  amount, price = computeSellOrder(A, b, R, F, s)
+  err = requestSellOrder(amount, price)
   return
 }
 
@@ -151,11 +212,13 @@ func main() {
   if flagTest {
     fmt.Printf("%v open orders\n", len(openOrders))
   } else {
-    if len(openOrders) == 2 {
+    if len(openOrders) == 4 {
       return
     }
-    if len(openOrders) == 1 {
-      cancelOrder(openOrders[0])
+  }
+  if len(openOrders) != 4 {
+    for _, order := range openOrders {
+      err = cancelOrder(order)
       if err != nil {
         fmt.Printf("Error cancel order: %v\n", err)
         return
@@ -181,36 +244,22 @@ func main() {
   s := 1 + (flagSpread / 100)
 
   previousRate := R*A / b
-  highRate := previousRate * s
-  lowRate := previousRate / s
-
-  lowX := feeRound((R * A - b * lowRate) / (1 + R + R * F), F)
-  highX := feeRound((b * highRate - R * A) / (1 + R + R * F) * (1 + F), F)
-  lowRate = (((A - lowX * (1 + F)) * R) - lowX) / b
-  highRate = (((A + highX * (1 - F)) * R) + highX) / b
-  buy := lowX / lowRate
-  sell := highX / highRate
 
   fmt.Printf("Creating new bitstamp orders.\n")
   fmt.Printf("USD = %v\n", A)
   fmt.Printf("BTC = %v\n", b)
   fmt.Printf("Fee = %v\n", F)
   fmt.Printf("Rate = %.2f\n", previousRate)
-  fmt.Printf("Buy %.8f at %.2f for %.2f\n", buy, lowRate, lowX)
-  fmt.Printf("Sell %.8f at %.2f for %.2f\n", sell, highRate, highX)
 
-  if flagTest {
-    fmt.Printf("Skipped creating orders.\n")
-  } else {
-    buyOrder(buy, lowRate)
-    if err != nil {
-      fmt.Printf("Error buy: %v\n", err)
-      return
-    }
-    sellOrder(sell, highRate)
-    if err != nil {
-      fmt.Printf("Error sell: %v\n", err)
-      return
-    }
+  err = placeBuyOrders(A, b, R, F, s)
+  if err != nil {
+    fmt.Printf("Error buy: %v\n", err)
+    return
+  }
+
+  err = placeSellOrders(A, b, R, F, s)
+  if err != nil {
+    fmt.Printf("Error sell: %v\n", err)
+    return
   }
 }
