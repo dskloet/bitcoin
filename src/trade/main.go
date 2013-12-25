@@ -1,6 +1,7 @@
 package main
 
 import (
+  "bitstamp"
 	"fmt"
   "math"
 )
@@ -76,7 +77,7 @@ func main() {
   if flagTest {
     fmt.Printf("%v open orders:\n", len(openOrders))
     for _, order := range openOrders {
-      fmt.Printf("%v\n", order)
+      fmt.Printf("%v\n", order.Desc())
     }
   } else {
     if len(openOrders) == 4 {
@@ -88,15 +89,15 @@ func main() {
     orderMap[order.String()] = order
   }
 
-  balance, err := requestMap(API_BALANCE)
+  balance, err := requestMap(bitstamp.API_BALANCE)
   if err != nil {
     fmt.Printf("Error balance: %v\n", err)
     return
   }
-  A := balance.get(USD_BALANCE)
-  b := balance.get(BTC_BALANCE)
+  A := balance.get(bitstamp.USD_BALANCE)
+  b := balance.get(bitstamp.BTC_BALANCE)
   R := flagBtcRatio / (1 - flagBtcRatio)
-  F := balance.get(FEE) / 100
+  F := balance.get(bitstamp.FEE) / 100
   if flagSpread < 200 * F {
     fmt.Printf(
         "spread (%.2f%%) must be at least twice the fee (%.2f%%) " +

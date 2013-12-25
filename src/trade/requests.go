@@ -1,6 +1,7 @@
 package main
 
 import (
+  "bitstamp"
   "crypto/hmac"
   "crypto/sha256"
   "encoding/json"
@@ -9,21 +10,6 @@ import (
   "net/url"
   "strconv"
   "time"
-)
-
-const (
-    API_URL = "https://www.bitstamp.net/api/"
-    API_BALANCE = "balance/"
-    API_OPEN_ORDERS = "open_orders/"
-    API_CANCEL_ORDER = "cancel_order/"
-    API_BUY = "buy/"
-    API_SELL = "sell/"
-)
-
-const (
-    USD_BALANCE = "usd_balance"
-    BTC_BALANCE = "btc_balance"
-    FEE = "fee"
 )
 
 type ApiResult map[string]interface{}
@@ -66,7 +52,7 @@ func createParams() (params url.Values) {
 
 func postRequest(path string, params url.Values) (resp *http.Response, err error) {
   var client http.Client
-  return client.PostForm(API_URL + path, params)
+  return client.PostForm(bitstamp.API_URL + path, params)
 }
 
 func requestMap(path string) (result ApiResult, err error) {
@@ -84,7 +70,7 @@ func requestMap(path string) (result ApiResult, err error) {
 
 func requestOrders() (result []*Order, err error) {
   params := createParams()
-  resp, err := postRequest(API_OPEN_ORDERS, params)
+  resp, err := postRequest(bitstamp.API_OPEN_ORDERS, params)
   if err != nil {
     return
   }
@@ -103,7 +89,7 @@ func cancelOrder(order Order) (err error) {
   }
   params := createParams()
   params["id"] = []string{ fmt.Sprintf("%d", order.Id) }
-  resp, err := postRequest(API_CANCEL_ORDER, params)
+  resp, err := postRequest(bitstamp.API_CANCEL_ORDER, params)
   if err == nil {
     resp.Body.Close()
   }
@@ -120,9 +106,9 @@ func requestOrder(order Order) (err error) {
   params["amount"] = []string{ order.Amount }
   params["price"] = []string{ order.Price }
   if order.Type == ORDER_BUY {
-    _, err = postRequest(API_BUY, params)
+    _, err = postRequest(bitstamp.API_BUY, params)
   } else if order.Type == ORDER_SELL {
-    _, err = postRequest(API_SELL, params)
+    _, err = postRequest(bitstamp.API_SELL, params)
   }
   return
 }
@@ -136,7 +122,7 @@ func requestBuyOrder(amount, price float64) (err error) {
   params := createParams()
   params["amount"] = []string{ fmt.Sprintf("%.8f", amount) }
   params["price"] = []string{ fmt.Sprintf("%.2f", price) }
-  _, err = postRequest(API_BUY, params)
+  _, err = postRequest(bitstamp.API_BUY, params)
   return
 }
 
@@ -149,7 +135,7 @@ func requestSellOrder(amount, price float64) (err error) {
   params := createParams()
   params["amount"] = []string{ fmt.Sprintf("%.8f", amount) }
   params["price"] = []string{ fmt.Sprintf("%.2f", price) }
-  _, err = postRequest(API_SELL, params)
+  _, err = postRequest(bitstamp.API_SELL, params)
   return
 }
 
