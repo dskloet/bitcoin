@@ -2,7 +2,7 @@ package main
 
 import (
   "bitstamp"
-	"fmt"
+  "fmt"
   "math"
 )
 
@@ -20,10 +20,10 @@ func (orderMap OrderMap) add(order *Order) {
 }
 
 func computeBuyOrder(A, b, R, F, s float64) (amount, price float64) {
-  previousRate := R*A / b
+  previousRate := R * A / b
   lowRate := previousRate / s
-  lowX := feeRound((R * A - b * lowRate) / (1 + R + R * F), F)
-  lowRate = (((A - lowX * (1 + F)) * R) - lowX) / b
+  lowX := feeRound((R*A-b*lowRate)/(1+R+R*F), F)
+  lowRate = (((A - lowX*(1+F)) * R) - lowX) / b
   buy := lowX / lowRate
   return buy, lowRate
 }
@@ -41,10 +41,10 @@ func placeBuyOrders(A, b, R, F, s float64, orderMap OrderMap) (err error) {
 }
 
 func computeSellOrder(A, b, R, F, s float64) (amount, price float64) {
-  previousRate := R*A / b
+  previousRate := R * A / b
   highRate := previousRate * s
-  highX := feeRound((b * highRate - R * A) / (1 + R + R * F) * (1 + F), F)
-  highRate = (((A + highX * (1 - F)) * R) + highX) / b
+  highX := feeRound((b*highRate-R*A)/(1+R+R*F)*(1+F), F)
+  highRate = (((A + highX*(1-F)) * R) + highX) / b
   sell := highX / highRate
   return sell, highRate
 }
@@ -98,15 +98,15 @@ func main() {
   b := balance.get(bitstamp.BTC_BALANCE)
   R := flagBtcRatio / (1 - flagBtcRatio)
   F := balance.get(bitstamp.FEE) / 100
-  if flagSpread < 200 * F {
+  if flagSpread < 200*F {
     fmt.Printf(
-        "spread (%.2f%%) must be at least twice the fee (%.2f%%) " +
-        "not to make a loss.\n", flagSpread, 100 * F)
+      "spread (%.2f%%) must be at least twice the fee (%.2f%%) "+
+        "not to make a loss.\n", flagSpread, 100*F)
     return
   }
   s := 1 + (flagSpread / 100)
 
-  previousRate := R*A / b
+  previousRate := R * A / b
 
   fmt.Printf("Creating new bitstamp orders.\n")
   fmt.Printf("USD = %v\n", A)

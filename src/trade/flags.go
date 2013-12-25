@@ -2,7 +2,7 @@ package main
 
 import (
   "flag"
-	"fmt"
+  "fmt"
   "os"
 )
 
@@ -19,9 +19,9 @@ func initFlags() {
   flag.StringVar(&flagApiSecret, "api_secret", "", "Bitstamp API secret")
   flag.StringVar(&flagClientId, "client_id", "", "Bitstamp client ID")
   flag.Float64Var(
-      &flagSpread, "spread", 2.0, "Percentage distance between buy/sell price")
+    &flagSpread, "spread", 2.0, "Percentage distance between buy/sell price")
   flag.Float64Var(
-      &flagBtcRatio, "btc_ratio", 0.2, "Ratio of capital that should be BTC")
+    &flagBtcRatio, "btc_ratio", 0.2, "Ratio of capital that should be BTC")
   flag.Parse()
 
   if flagApiKey == "" || flagApiSecret == "" || flagClientId == "" {
@@ -29,4 +29,3 @@ func initFlags() {
     os.Exit(1)
   }
 }
-

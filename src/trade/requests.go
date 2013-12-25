@@ -5,7 +5,7 @@ import (
   "crypto/hmac"
   "crypto/sha256"
   "encoding/json"
-	"fmt"
+  "fmt"
   "net/http"
   "net/url"
   "strconv"
@@ -15,23 +15,23 @@ import (
 type ApiResult map[string]interface{}
 
 const (
-    ORDER_BUY = 0
-    ORDER_SELL = 1
+  ORDER_BUY  = 0
+  ORDER_SELL = 1
 )
 
 const (
-    ORDER_REMOVE = iota
-    ORDER_KEEP = iota
-    ORDER_NEW = iota
+  ORDER_REMOVE = iota
+  ORDER_KEEP   = iota
+  ORDER_NEW    = iota
 )
 
 type Order struct {
-  Id int64
-  Type int
-  Price string
+  Id     int64
+  Type   int
+  Price  string
   Amount string
   status int
-  value string
+  value  string
 }
 
 var now int64 = time.Now().Unix()
@@ -44,15 +44,15 @@ func createParams() (params url.Values) {
   mac.Write([]byte(message))
 
   params = make(url.Values)
-  params["key"] = []string{ flagApiKey }
-  params["nonce"] = []string{ nonce }
-  params["signature"] = []string{ fmt.Sprintf("%X", mac.Sum(nil)) }
+  params["key"] = []string{flagApiKey}
+  params["nonce"] = []string{nonce}
+  params["signature"] = []string{fmt.Sprintf("%X", mac.Sum(nil))}
   return
 }
 
 func postRequest(path string, params url.Values) (resp *http.Response, err error) {
   var client http.Client
-  return client.PostForm(bitstamp.API_URL + path, params)
+  return client.PostForm(bitstamp.API_URL+path, params)
 }
 
 func requestMap(path string) (result ApiResult, err error) {
@@ -84,11 +84,11 @@ func requestOrders() (result []*Order, err error) {
 func cancelOrder(order Order) (err error) {
   fmt.Printf("Cancel order %v\n", order.Desc())
   if flagTest {
-    fmt.Printf("Skipped\n");
+    fmt.Printf("Skipped\n")
     return
   }
   params := createParams()
-  params["id"] = []string{ fmt.Sprintf("%d", order.Id) }
+  params["id"] = []string{fmt.Sprintf("%d", order.Id)}
   resp, err := postRequest(bitstamp.API_CANCEL_ORDER, params)
   if err == nil {
     resp.Body.Close()
@@ -103,8 +103,8 @@ func requestOrder(order Order) (err error) {
     return
   }
   params := createParams()
-  params["amount"] = []string{ order.Amount }
-  params["price"] = []string{ order.Price }
+  params["amount"] = []string{order.Amount}
+  params["price"] = []string{order.Price}
   if order.Type == ORDER_BUY {
     _, err = postRequest(bitstamp.API_BUY, params)
   } else if order.Type == ORDER_SELL {
@@ -114,27 +114,27 @@ func requestOrder(order Order) (err error) {
 }
 
 func requestBuyOrder(amount, price float64) (err error) {
-  fmt.Printf("Buy %.8f at %.2f for %.2f\n", amount, price, amount * price)
+  fmt.Printf("Buy %.8f at %.2f for %.2f\n", amount, price, amount*price)
   if flagTest {
     fmt.Printf("Skipped\n")
     return
   }
   params := createParams()
-  params["amount"] = []string{ fmt.Sprintf("%.8f", amount) }
-  params["price"] = []string{ fmt.Sprintf("%.2f", price) }
+  params["amount"] = []string{fmt.Sprintf("%.8f", amount)}
+  params["price"] = []string{fmt.Sprintf("%.2f", price)}
   _, err = postRequest(bitstamp.API_BUY, params)
   return
 }
 
 func requestSellOrder(amount, price float64) (err error) {
-  fmt.Printf("Sell %.8f at %.2f for %.2f\n", amount, price, amount * price)
+  fmt.Printf("Sell %.8f at %.2f for %.2f\n", amount, price, amount*price)
   if flagTest {
     fmt.Printf("Skipped\n")
     return
   }
   params := createParams()
-  params["amount"] = []string{ fmt.Sprintf("%.8f", amount) }
-  params["price"] = []string{ fmt.Sprintf("%.2f", price) }
+  params["amount"] = []string{fmt.Sprintf("%.8f", amount)}
+  params["price"] = []string{fmt.Sprintf("%.2f", price)}
   _, err = postRequest(bitstamp.API_SELL, params)
   return
 }
@@ -146,10 +146,10 @@ func (result ApiResult) get(name string) float64 {
 
 func NewOrder(orderType int, amount, price float64) *Order {
   return &Order{
-    Type: orderType,
+    Type:   orderType,
     Amount: fmt.Sprintf("%.8f", amount),
-    Price: fmt.Sprintf("%.2f", price),
-    value: fmt.Sprintf("%.2f", price * amount),
+    Price:  fmt.Sprintf("%.2f", price),
+    value:  fmt.Sprintf("%.2f", price*amount),
   }
 }
 
@@ -175,10 +175,10 @@ func (order Order) String() string {
 
 func (order Order) Desc() string {
   desc := fmt.Sprintf(
-      "%v %v at %v",
-      order.Verb(),
-      order.Amount,
-      order.Price)
+    "%v %v at %v",
+    order.Verb(),
+    order.Amount,
+    order.Price)
   if order.value != "" {
     desc += " for " + order.value
   }
