@@ -2,6 +2,7 @@ package main
 
 import (
   "bitstamp"
+  "fmt"
 )
 
 const (
@@ -38,6 +39,7 @@ func NewSellOrder(amount, price float64) *StatusOrder {
 
 func (order StatusOrder) Execute(client *bitstamp.Client) (err error) {
   if order.status == ORDER_KEEP {
+    fmt.Printf("Keep order %v\n", order)
     return
   }
   if order.status == ORDER_REMOVE {
