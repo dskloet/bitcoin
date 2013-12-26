@@ -43,7 +43,7 @@ func (client *Client) createParams() (params url.Values) {
 
 func getRequest(path string) (result resultMap, err error) {
   var httpClient http.Client
-  resp, err := httpClient.Get(API_URL+path)
+  resp, err := httpClient.Get(API_URL + path)
   if err != nil {
     return
   }

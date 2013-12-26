@@ -19,8 +19,8 @@ func ticker() {
   fmt.Printf("bid: %8.2f\n", ticker.Bid)
   fmt.Printf("ask: %8.2f\n", ticker.Ask)
   fmt.Printf(
-      "volume: %.8f BTC ($%.2f million)\n",
-      ticker.Volume, ticker.Volume * ticker.Last / 1000000)
+    "volume: %.8f BTC ($%.2f million)\n",
+    ticker.Volume, ticker.Volume*ticker.Last/1000000)
 }
 
 func main() {

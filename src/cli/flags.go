@@ -1,8 +1,8 @@
 package main
 
 import (
-    "flag"
-    )
+  "flag"
+)
 
 type Flags struct {
   ticker bool
