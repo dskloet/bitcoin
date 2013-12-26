@@ -6,9 +6,9 @@ import (
   "math"
 )
 
-type OrderMap map[string]*Order
+type OrderMap map[string]*StatusOrder
 
-func (orderMap OrderMap) add(order *Order) {
+func (orderMap OrderMap) add(order *StatusOrder) {
   str := order.String()
   existing, ok := orderMap[str]
   if ok {
@@ -68,8 +68,10 @@ func feeRound(x, feeRate float64) float64 {
 
 func main() {
   initFlags()
+  client := bitstamp.NewClient(flagClientId, flagApiKey, flagApiSecret)
+  client.DryRun = flagTest
 
-  openOrders, err := requestOrders()
+  openOrders, err := client.RequestOpenOrders()
   if err != nil {
     fmt.Printf("Error open orders: %v\n", err)
     return
@@ -77,27 +79,27 @@ func main() {
   if flagTest {
     fmt.Printf("%v open orders:\n", len(openOrders))
     for _, order := range openOrders {
-      fmt.Printf("%v\n", order.Desc())
+      fmt.Printf("%v\n", order)
     }
   } else {
     if len(openOrders) == 4 {
       return
     }
   }
-  orderMap := make(map[string]*Order)
+  orderMap := make(map[string]*StatusOrder)
   for _, order := range openOrders {
-    orderMap[order.String()] = order
+    orderMap[order.String()] = &StatusOrder{order, ORDER_REMOVE}
   }
 
-  balance, err := requestMap(bitstamp.API_BALANCE)
+  balance, err := client.RequestBalance()
   if err != nil {
     fmt.Printf("Error balance: %v\n", err)
     return
   }
-  A := balance.get(bitstamp.USD_BALANCE)
-  b := balance.get(bitstamp.BTC_BALANCE)
+  A := balance.Usd
+  b := balance.Btc
   R := flagBtcRatio / (1 - flagBtcRatio)
-  F := balance.get(bitstamp.FEE) / 100
+  F := balance.Fee / 100
   if flagSpread < 200*F {
     fmt.Printf(
       "spread (%.2f%%) must be at least twice the fee (%.2f%%) "+
@@ -118,7 +120,7 @@ func main() {
   placeSellOrders(A, b, R, F, s, orderMap)
 
   for _, order := range orderMap {
-    err := order.Execute()
+    err := order.Execute(client)
     if err != nil {
       fmt.Printf("Error executing order: %v\n", order)
     }

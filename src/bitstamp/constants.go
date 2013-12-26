@@ -14,3 +14,8 @@ const (
   BTC_BALANCE = "btc_balance"
   FEE         = "fee"
 )
+
+const (
+  ORDER_BUY  = 0
+  ORDER_SELL = 1
+)

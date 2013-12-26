@@ -12,7 +12,7 @@ type Balance struct {
 
 func (client *Client) RequestBalance() (balance Balance, err error) {
   params := client.createParams()
-  result, err := requestMap("balance/", params)
+  result, err := requestMap(API_BALANCE, params)
   if err != nil {
     return
   }

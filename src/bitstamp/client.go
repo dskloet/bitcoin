@@ -7,7 +7,6 @@ import (
   "fmt"
   "net/http"
   "net/url"
-  "strconv"
   "time"
 )
 
@@ -16,9 +15,8 @@ type Client struct {
   apiKey    string
   apiSecret string
   nonce     int64
+  DryRun    bool
 }
-
-type resultMap map[string]interface{}
 
 func NewClient(clientId, apiKey, apiSecret string) *Client {
   return &Client{
@@ -43,12 +41,16 @@ func (client *Client) createParams() (params url.Values) {
   return
 }
 
-func postRequest(path string, params url.Values) (resp *http.Response, err error) {
-  var client http.Client
-  return client.PostForm(API_URL+path, params)
+func postRequest(path string, params url.Values) (
+  resp *http.Response, err error) {
+
+  var httpClient http.Client
+  return httpClient.PostForm(API_URL+path, params)
 }
 
-func requestMap(path string, params url.Values) (result resultMap, err error) {
+func requestMap(path string, params url.Values) (
+  result resultMap, err error) {
+
   resp, err := postRequest(path, params)
   if err != nil {
     return
@@ -58,20 +60,4 @@ func requestMap(path string, params url.Values) (result resultMap, err error) {
   jsonDecoder := json.NewDecoder(resp.Body)
   err = jsonDecoder.Decode(&result)
   return
-}
-
-func (r resultMap) getFloat(name string) float64 {
-  value := r[name]
-  switch value := value.(type) {
-  default:
-    return 0
-  case float64:
-    return value
-  case string:
-    result, err := strconv.ParseFloat(value, 64)
-    if err != nil {
-      fmt.Printf("Error converting: %v\n", err)
-    }
-    return result
-  }
 }
