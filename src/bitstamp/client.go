@@ -41,22 +41,29 @@ func (client *Client) createParams() (params url.Values) {
   return
 }
 
-func postRequest(path string, params url.Values) (
-  resp *http.Response, err error) {
+func getRequest(path string) (result resultMap, err error) {
+  var httpClient http.Client
+  resp, err := httpClient.Get(API_URL+path)
+  if err != nil {
+    return
+  }
+  defer resp.Body.Close()
+  jsonDecoder := json.NewDecoder(resp.Body)
+  err = jsonDecoder.Decode(&result)
+  return
+}
 
+func postRequest(path string, params url.Values) (resp *http.Response, err error) {
   var httpClient http.Client
   return httpClient.PostForm(API_URL+path, params)
 }
 
-func requestMap(path string, params url.Values) (
-  result resultMap, err error) {
-
+func requestMap(path string, params url.Values) (result resultMap, err error) {
   resp, err := postRequest(path, params)
   if err != nil {
     return
   }
   defer resp.Body.Close()
-
   jsonDecoder := json.NewDecoder(resp.Body)
   err = jsonDecoder.Decode(&result)
   return

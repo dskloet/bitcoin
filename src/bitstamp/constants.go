@@ -2,6 +2,7 @@ package bitstamp
 
 const (
   API_URL          = "https://www.bitstamp.net/api/"
+  API_TICKER       = "ticker/"
   API_BALANCE      = "balance/"
   API_OPEN_ORDERS  = "open_orders/"
   API_CANCEL_ORDER = "cancel_order/"
