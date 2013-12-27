@@ -6,7 +6,7 @@ import (
 )
 
 const (
-  COMMANDS = "{ticker, orderbook}"
+  COMMANDS = "{ticker, orderbook, transactions}"
 )
 
 var flags Flags
@@ -18,6 +18,8 @@ func main() {
     ticker()
   case "orderbook":
     orderBook()
+  case "transactions":
+    transactions()
   default:
     fmt.Printf("Command must be one of %s\n", COMMANDS)
     os.Exit(1)
