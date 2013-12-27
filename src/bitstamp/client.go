@@ -69,6 +69,10 @@ func requestMap(path string, params url.Values) (result resultMap, err error) {
     return
   }
   err = jsonParse(resp.Body, &result)
+  errorString := result["error"]
+  if errorString != nil {
+    err = errors.New(errorString.(string))
+  }
   return
 }
 

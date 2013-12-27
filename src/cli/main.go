@@ -22,6 +22,8 @@ func main() {
     transactions()
   case "eurusd":
     eurUsd()
+  case "balance":
+    balance()
   default:
     fmt.Printf("Command must be one of %s\n", COMMANDS)
     os.Exit(1)
