@@ -1,7 +1,6 @@
 package bitstamp
 
 import (
-  "encoding/json"
   "strconv"
   "time"
 )
@@ -23,10 +22,11 @@ func (client Client) OrderBook() (orderBook OrderBook, err error) {
   if err != nil {
     return
   }
-  defer resp.Body.Close()
   var unparsed unparsedOrderBook
-  jsonDecoder := json.NewDecoder(resp.Body)
-  err = jsonDecoder.Decode(&unparsed)
+  err = jsonParse(resp.Body, &unparsed)
+  if err != nil {
+    return
+  }
 
   timestamp, err := strconv.ParseInt(unparsed.Timestamp, 10, 64)
   if err != nil {

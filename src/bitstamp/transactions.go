@@ -1,7 +1,6 @@
 package bitstamp
 
 import (
-  "encoding/json"
   "strconv"
   "time"
 )
@@ -25,10 +24,11 @@ func (client Client) Transactions() (transactions []Transaction, err error) {
   if err != nil {
     return
   }
-  defer resp.Body.Close()
   var unparsed []unparsedTransaction
-  jsonDecoder := json.NewDecoder(resp.Body)
-  err = jsonDecoder.Decode(&unparsed)
+  err = jsonParse(resp.Body, &unparsed)
+  if err != nil {
+    return
+  }
 
   n := len(unparsed)
   transactions = make([]Transaction, n)

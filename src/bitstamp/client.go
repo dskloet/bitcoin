@@ -1,10 +1,13 @@
 package bitstamp
 
 import (
+  "bytes"
   "crypto/hmac"
   "crypto/sha256"
   "encoding/json"
+  "errors"
   "fmt"
+  "io"
   "net/http"
   "net/url"
   "time"
@@ -51,9 +54,7 @@ func getMap(path string) (result resultMap, err error) {
   if err != nil {
     return
   }
-  defer resp.Body.Close()
-  jsonDecoder := json.NewDecoder(resp.Body)
-  err = jsonDecoder.Decode(&result)
+  err = jsonParse(resp.Body, &result)
   return
 }
 
@@ -67,8 +68,18 @@ func requestMap(path string, params url.Values) (result resultMap, err error) {
   if err != nil {
     return
   }
-  defer resp.Body.Close()
-  jsonDecoder := json.NewDecoder(resp.Body)
-  err = jsonDecoder.Decode(&result)
+  err = jsonParse(resp.Body, &result)
+  return
+}
+
+func jsonParse(reader io.ReadCloser, result interface{}) (err error) {
+  defer reader.Close()
+  buf := bytes.NewBuffer(nil)
+  io.Copy(buf, reader)
+
+  err = json.Unmarshal(buf.Bytes(), result)
+  if err != nil {
+    err = errors.New(fmt.Sprintf("Couldn't parse json: %v", buf))
+  }
   return
 }
