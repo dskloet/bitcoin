@@ -16,16 +16,18 @@ func main() {
   switch flags.c {
   case "ticker":
     ticker()
-  case "orderbook":
+  case "order_book":
     orderBook()
   case "transactions":
     transactions()
-  case "eurusd":
+  case "eur_usd":
     eurUsd()
   case "balance":
     balance()
-  case "usertransactions":
+  case "user_transactions":
     userTransactions()
+  case "open_orders":
+    openOrders()
   default:
     fmt.Printf("Command must be one of %s\n", COMMANDS)
     os.Exit(1)

@@ -14,27 +14,23 @@ const (
 type OrderStatus int
 
 type StatusOrder struct {
-  *bitstamp.Order
+  bitstamp.Order
   status OrderStatus
 }
 
-func NewOrder(orderType bitstamp.OrderType, amount, price float64) *StatusOrder {
+func NewOrder(orderType bitstamp.OrderType, price, amount float64) *StatusOrder {
   return &StatusOrder{
-    &bitstamp.Order{
-      Type:   orderType,
-      Amount: amount,
-      Price:  price,
-    },
+    *bitstamp.NewOrder(orderType, price, amount),
     ORDER_NEW,
   }
 }
 
-func NewBuyOrder(amount, price float64) *StatusOrder {
-  return NewOrder(bitstamp.ORDER_BUY, amount, price)
+func NewBuyOrder(price, amount float64) *StatusOrder {
+  return NewOrder(bitstamp.ORDER_BUY, price, amount)
 }
 
-func NewSellOrder(amount, price float64) *StatusOrder {
-  return NewOrder(bitstamp.ORDER_SELL, amount, price)
+func NewSellOrder(price, amount float64) *StatusOrder {
+  return NewOrder(bitstamp.ORDER_SELL, price, amount)
 }
 
 func (order StatusOrder) Execute(client *bitstamp.Client) (err error) {

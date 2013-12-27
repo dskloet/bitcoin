@@ -19,45 +19,47 @@ func (orderMap OrderMap) add(order *StatusOrder) {
   }
 }
 
-func computeBuyOrder(A, b, R, F, s float64) (amount, price float64) {
+func computeBuyOrder(A, b, R, F, s float64) (price, amount float64) {
   previousRate := R * A / b
   lowRate := previousRate / s
   lowX := feeRound((R*A-b*lowRate)/(1+R+R*F), F)
   lowRate = (((A - lowX*(1+F)) * R) - lowX) / b
   buy := lowX / lowRate
-  return buy, lowRate
+  price, amount = lowRate, buy
+  return
 }
 
 func placeBuyOrders(A, b, R, F, s float64, orderMap OrderMap) (err error) {
-  amount, price := computeBuyOrder(A, b, R, F, s)
-  orderMap.add(NewBuyOrder(amount, price))
+  price, amount := computeBuyOrder(A, b, R, F, s)
+  orderMap.add(NewBuyOrder(price, amount))
 
   cost := amount * price * (1 + F)
   A -= cost
   b += amount
-  amount, price = computeBuyOrder(A, b, R, F, s)
-  orderMap.add(NewBuyOrder(amount, price))
+  price, amount = computeBuyOrder(A, b, R, F, s)
+  orderMap.add(NewBuyOrder(price, amount))
   return
 }
 
-func computeSellOrder(A, b, R, F, s float64) (amount, price float64) {
+func computeSellOrder(A, b, R, F, s float64) (price, amount float64) {
   previousRate := R * A / b
   highRate := previousRate * s
   highX := feeRound((b*highRate-R*A)/(1+R+R*F)*(1+F), F)
   highRate = (((A + highX*(1-F)) * R) + highX) / b
   sell := highX / highRate
-  return sell, highRate
+  price, amount = highRate, sell
+  return
 }
 
 func placeSellOrders(A, b, R, F, s float64, orderMap OrderMap) (err error) {
-  amount, price := computeSellOrder(A, b, R, F, s)
-  orderMap.add(NewSellOrder(amount, price))
+  price, amount := computeSellOrder(A, b, R, F, s)
+  orderMap.add(NewSellOrder(price, amount))
 
   gain := amount * price * (1 - F)
   A += gain
   b -= amount
-  amount, price = computeSellOrder(A, b, R, F, s)
-  orderMap.add(NewSellOrder(amount, price))
+  price, amount = computeSellOrder(A, b, R, F, s)
+  orderMap.add(NewSellOrder(price, amount))
   return
 }
 
