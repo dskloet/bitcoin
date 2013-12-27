@@ -7,9 +7,9 @@ import (
 
 func balance() {
   client := bitstamp.NewClient(
-      flags.clientId,
-      flags.apiKey,
-      flags.apiSecret)
+    flags.clientId,
+    flags.apiKey,
+    flags.apiSecret)
 
   balance, err := client.Balance()
   if err != nil {

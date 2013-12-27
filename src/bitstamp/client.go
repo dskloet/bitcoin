@@ -80,7 +80,6 @@ func jsonParse(reader io.ReadCloser, result interface{}) (err error) {
   defer reader.Close()
   buf := bytes.NewBuffer(nil)
   io.Copy(buf, reader)
-
   err = json.Unmarshal(buf.Bytes(), result)
   if err != nil {
     err = errors.New(fmt.Sprintf("Couldn't parse json: %v", buf))

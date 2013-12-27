@@ -24,6 +24,8 @@ func main() {
     eurUsd()
   case "balance":
     balance()
+  case "usertransactions":
+    userTransactions()
   default:
     fmt.Printf("Command must be one of %s\n", COMMANDS)
     os.Exit(1)
