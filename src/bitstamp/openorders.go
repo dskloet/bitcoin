@@ -1,6 +1,10 @@
 package bitstamp
 
-func (client *Client) OpenOrders() (openOrders []*Order, err error) {
+import (
+  "sort"
+)
+
+func (client *Client) OpenOrders() (openOrders OrderList, err error) {
   params := client.createParams()
   resp, err := postRequest(API_OPEN_ORDERS, params)
   if err != nil {
@@ -12,16 +16,17 @@ func (client *Client) OpenOrders() (openOrders []*Order, err error) {
     return
   }
 
-  openOrders = make([]*Order, len(mapList))
+  openOrders = make(OrderList, len(mapList))
   for i, orderMap := range mapList {
     openOrders[i] = mapToOrder(orderMap)
   }
+  sort.Sort(openOrders)
 
   return
 }
 
-func mapToOrder(result resultMap) *Order {
-  return &Order{
+func mapToOrder(result resultMap) Order {
+  return Order{
     Id:     result.getInt("id"),
     Type:   OrderType(result.getInt("type")),
     Price:  result.getFloat("price"),

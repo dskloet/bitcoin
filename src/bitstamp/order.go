@@ -29,18 +29,32 @@ func NewSellOrder(price, amount float64) *Order {
   return NewOrder(ORDER_SELL, price, amount)
 }
 
-func (order *Order) Verb() string {
+func (order Order) Verb() string {
   if order.Type == ORDER_BUY {
     return "Buy"
   }
   return "Sell"
 }
 
-func (order *Order) String() string {
+func (order Order) String() string {
   return fmt.Sprintf(
     "%v %.8f at %.2f for %.2f",
     order.Verb(),
     order.Amount,
     order.Price,
     order.Amount*order.Price)
+}
+
+type OrderList []Order
+
+func (list OrderList) Len() int {
+  return len(list)
+}
+
+func (list OrderList) Less(i, j int) bool {
+  return list[j].Price < list[i].Price
+}
+
+func (list OrderList) Swap(i, j int) {
+  list[i], list[j] = list[j], list[i]
 }

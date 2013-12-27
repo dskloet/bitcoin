@@ -3,7 +3,6 @@ package main
 import (
   "bitstamp"
   "fmt"
-  //"time"
 )
 
 func userTransactions() {
