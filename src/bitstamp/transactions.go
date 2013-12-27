@@ -38,7 +38,7 @@ func (client Client) Transactions() (transactions []Transaction, err error) {
     if err != nil {
       return
     }
-    transactions[n - 1 - i] = transaction
+    transactions[n-1-i] = transaction
   }
   return
 }
