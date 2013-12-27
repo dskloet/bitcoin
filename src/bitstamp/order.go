@@ -13,6 +13,22 @@ type Order struct {
   Amount float64
 }
 
+func NewOrder(orderType OrderType, price, amount float64) *Order {
+  return &Order{
+    Type:   orderType,
+    Price:  price,
+    Amount: amount,
+  }
+}
+
+func NewBuyOrder(price, amount float64) *Order {
+  return NewOrder(ORDER_BUY, price, amount)
+}
+
+func NewSellOrder(price, amount float64) *Order {
+  return NewOrder(ORDER_SELL, price, amount)
+}
+
 func (order *Order) Verb() string {
   if order.Type == ORDER_BUY {
     return "Buy"

@@ -5,11 +5,11 @@ import (
 )
 
 type Flags struct {
-  ticker bool
+  c string
 }
 
 func initFlags() (flags Flags) {
-  flag.BoolVar(&flags.ticker, "ticker", false, "Show ticker information")
+  flag.StringVar(&flags.c, "c", "ticker", "Command. Any from "+COMMANDS)
   flag.Parse()
   return
 }

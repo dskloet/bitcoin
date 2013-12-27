@@ -41,9 +41,13 @@ func (client *Client) createParams() (params url.Values) {
   return
 }
 
-func getRequest(path string) (result resultMap, err error) {
+func getRequest(path string) (resp *http.Response, err error) {
   var httpClient http.Client
-  resp, err := httpClient.Get(API_URL + path)
+  return httpClient.Get(API_URL + path)
+}
+
+func getMap(path string) (result resultMap, err error) {
+  resp, err := getRequest(path)
   if err != nil {
     return
   }

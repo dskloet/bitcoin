@@ -10,7 +10,7 @@ type Ticker struct {
 }
 
 func RequestTicker() (ticker Ticker, err error) {
-  result, err := getRequest(API_TICKER)
+  result, err := getMap(API_TICKER)
   if err != nil {
     return
   }
