@@ -4,7 +4,7 @@ import (
   "encoding/json"
 )
 
-func (client *Client) RequestOpenOrders() (openOrders []*Order, err error) {
+func (client *Client) OpenOrders() (openOrders []*Order, err error) {
   params := client.createParams()
   resp, err := postRequest(API_OPEN_ORDERS, params)
   if err != nil {

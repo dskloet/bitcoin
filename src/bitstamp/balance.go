@@ -10,7 +10,7 @@ type Balance struct {
   Fee          float64
 }
 
-func (client *Client) RequestBalance() (balance Balance, err error) {
+func (client *Client) Balance() (balance Balance, err error) {
   params := client.createParams()
   result, err := requestMap(API_BALANCE, params)
   if err != nil {

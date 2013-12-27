@@ -9,7 +9,7 @@ type Ticker struct {
   Ask    float64
 }
 
-func RequestTicker() (ticker Ticker, err error) {
+func (client Client) Ticker() (ticker Ticker, err error) {
   result, err := getMap(API_TICKER)
   if err != nil {
     return

@@ -6,7 +6,8 @@ import (
 )
 
 func ticker() {
-  ticker, err := bitstamp.RequestTicker()
+  var client bitstamp.Client
+  ticker, err := client.Ticker()
   if err != nil {
     fmt.Printf("Error: %v\n", err)
     return

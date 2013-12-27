@@ -6,7 +6,8 @@ import (
 )
 
 func orderBook() {
-  orderBook, err := bitstamp.RequestOrderBook()
+  var client bitstamp.Client
+  orderBook, err := client.OrderBook()
   if err != nil {
     fmt.Printf("Error: %v\n", err)
     return

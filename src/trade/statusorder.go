@@ -43,11 +43,11 @@ func (order StatusOrder) Execute(client *bitstamp.Client) (err error) {
     return
   }
   if order.status == ORDER_REMOVE {
-    return client.RequestCancelOrder(order.Order)
+    return client.CancelOrder(order.Order)
   }
   if order.Type == bitstamp.ORDER_BUY {
-    return client.RequestBuy(order.Amount, order.Price)
+    return client.Buy(order.Amount, order.Price)
   } else {
-    return client.RequestSell(order.Amount, order.Price)
+    return client.Sell(order.Amount, order.Price)
   }
 }

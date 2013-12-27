@@ -71,7 +71,7 @@ func main() {
   client := bitstamp.NewClient(flagClientId, flagApiKey, flagApiSecret)
   client.DryRun = flagTest
 
-  openOrders, err := client.RequestOpenOrders()
+  openOrders, err := client.OpenOrders()
   if err != nil {
     fmt.Printf("Error open orders: %v\n", err)
     return
@@ -91,7 +91,7 @@ func main() {
     orderMap[order.String()] = &StatusOrder{order, ORDER_REMOVE}
   }
 
-  balance, err := client.RequestBalance()
+  balance, err := client.Balance()
   if err != nil {
     fmt.Printf("Error balance: %v\n", err)
     return

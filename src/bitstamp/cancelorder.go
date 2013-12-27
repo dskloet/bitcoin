@@ -4,7 +4,7 @@ import (
   "fmt"
 )
 
-func (client *Client) RequestCancelOrder(order *Order) (err error) {
+func (client *Client) CancelOrder(order *Order) (err error) {
   if client.DryRun {
     fmt.Printf("Skipping cancel order %v\n", order)
     return

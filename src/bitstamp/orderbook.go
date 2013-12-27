@@ -18,7 +18,7 @@ type unparsedOrderBook struct {
   Asks      [][]string
 }
 
-func RequestOrderBook() (orderBook OrderBook, err error) {
+func (client Client) OrderBook() (orderBook OrderBook, err error) {
   resp, err := getRequest(API_ORDER_BOOK)
   if err != nil {
     return
