@@ -79,10 +79,24 @@ func requestMap(path string, params url.Values) (result resultMap, err error) {
 func jsonParse(reader io.ReadCloser, result interface{}) (err error) {
   defer reader.Close()
   buf := bytes.NewBuffer(nil)
-  io.Copy(buf, reader)
+  _, err = io.Copy(buf, reader)
+  if err != nil {
+    return
+  }
   err = json.Unmarshal(buf.Bytes(), result)
   if err != nil {
     err = errors.New(fmt.Sprintf("Couldn't parse json: %v", buf))
   }
+  return
+}
+
+func readerToString(reader io.ReadCloser) (str string, err error) {
+  defer reader.Close()
+  buf := bytes.NewBuffer(nil)
+  _, err = io.Copy(buf, reader)
+  if err != nil {
+    return
+  }
+  str = buf.String()
   return
 }

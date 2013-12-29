@@ -9,6 +9,7 @@ type Flags struct {
   clientId  string
   apiKey    string
   apiSecret string
+  id int64
 }
 
 func initFlags() (flags Flags) {
@@ -22,6 +23,7 @@ func initFlags() (flags Flags) {
   flag.StringVar(
     &flags.apiSecret, "api_secret", "",
     "Bitstamp API secret for authenticated requests")
+  flag.Int64Var(&flags.id, "id", 0, "Order ID for cancel_order command")
   flag.Parse()
   return
 }

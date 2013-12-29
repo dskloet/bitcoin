@@ -28,6 +28,8 @@ func main() {
     userTransactions()
   case "open_orders":
     openOrders()
+  case "cancel_order":
+    cancelOrder()
   default:
     fmt.Printf("Command must be one of %s\n", COMMANDS)
     os.Exit(1)
