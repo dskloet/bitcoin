@@ -1,6 +1,7 @@
 package main
 
 import (
+  "bitcoin"
   "flag"
 )
 
@@ -9,7 +10,9 @@ type Flags struct {
   clientId  string
   apiKey    string
   apiSecret string
-  id int64
+  id        int64
+  first     bitcoin.Currency
+  second    bitcoin.Currency
 }
 
 func initFlags() (flags Flags) {
@@ -24,6 +27,10 @@ func initFlags() (flags Flags) {
     &flags.apiSecret, "api_secret", "",
     "Bitstamp API secret for authenticated requests")
   flag.Int64Var(&flags.id, "id", 0, "Order ID for cancel_order command")
+  flag.StringVar(
+    (*string)(&flags.first), "first", "btc", "First of the currency pair")
+  flag.StringVar(
+    (*string)(&flags.second), "second", "usd", "Second of the currency pair")
   flag.Parse()
   return
 }

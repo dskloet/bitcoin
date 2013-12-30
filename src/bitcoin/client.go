@@ -20,7 +20,7 @@ type Client interface {
   ///// Unauthenticated requests
 
   // The price of the first expressed in the second currency.
-  LatestRate(first, second Currency) (rate float64, err error)
+  LastRate(first, second Currency) (rate float64, err error)
 
   // Returns the part of the order book consisting of orders buying and selling
   // the given currencies.

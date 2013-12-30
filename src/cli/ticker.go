@@ -21,3 +21,13 @@ func ticker() {
     "volume: %.8f BTC ($%.2f million)\n",
     ticker.Volume, ticker.Volume*ticker.Last/1000000)
 }
+
+func last() {
+  var client bitstamp.Client
+  rate, err := client.LastRate(flags.first, flags.second)
+  if err != nil {
+    fmt.Printf("Error: %v\n", err)
+    return
+  }
+  fmt.Printf("%v/%v: %v\n", flags.first, flags.second, rate)
+}

@@ -6,7 +6,8 @@ import (
 )
 
 const (
-  COMMANDS = "{ticker, orderbook, transactions, eurusd}"
+  COMMANDS = "{ticker, last, order_book, transactions, eur_usd, balance, " +
+    "user_transactions, open_orders, cancel_order}"
 )
 
 var flags Flags
@@ -16,6 +17,8 @@ func main() {
   switch flags.c {
   case "ticker":
     ticker()
+  case "last":
+    last()
   case "order_book":
     orderBook()
   case "transactions":

@@ -19,6 +19,8 @@ type Client struct {
   apiSecret string
   nonce     int64
   DryRun    bool
+
+  tickerCache Ticker
 }
 
 func NewClient(clientId, apiKey, apiSecret string) *Client {
