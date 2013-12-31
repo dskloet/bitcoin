@@ -1,6 +1,7 @@
 package main
 
 import (
+  "bitcoin"
   "bitstamp"
   "fmt"
 )
@@ -11,16 +12,22 @@ func balance() {
     flags.apiKey,
     flags.apiSecret)
 
-  balance, err := client.Balance()
+  usd, err := client.Balance(bitcoin.USD)
   if err != nil {
     fmt.Printf("Error: %v\n", err)
     return
   }
-  fmt.Printf("USD:          %8.2f\n", balance.Usd)
-  fmt.Printf("USD reserved: %8.2f\n", balance.UsdReserved)
-  fmt.Printf("USD available:%8.2f\n", balance.UsdAvailable)
-  fmt.Printf("BTC:           %f\n", balance.Btc)
-  fmt.Printf("BTC reserved:  %f\n", balance.BtcReserved)
-  fmt.Printf("BTC available: %f\n", balance.BtcAvailable)
-  fmt.Printf("Fee: %.2f%%\n", balance.Fee)
+  btc, err := client.Balance(bitcoin.BTC)
+  if err != nil {
+    fmt.Printf("Error: %v\n", err)
+    return
+  }
+  fee, err := client.Fee()
+  if err != nil {
+    fmt.Printf("Error: %v\n", err)
+    return
+  }
+  fmt.Printf("USD: %.2f\n", usd)
+  fmt.Printf("BTC: %.8f\n", btc)
+  fmt.Printf("Fee: %.2f%%\n", fee * 100)
 }

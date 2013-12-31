@@ -21,6 +21,7 @@ type Client struct {
   DryRun    bool
 
   tickerCache Ticker
+  balanceCache Balance
 }
 
 func NewClient(clientId, apiKey, apiSecret string) *Client {

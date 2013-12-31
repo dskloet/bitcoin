@@ -21,7 +21,7 @@ func userTransactions() {
       transaction.Datetime.Format("2006-01-02 15:04:05"),
       transaction.Btc,
       transaction.Usd,
-      transaction.Usd/transaction.Btc,
+      -transaction.Usd/transaction.Btc,
       transaction.Fee)
   }
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+  "bitcoin"
   "bitstamp"
   "fmt"
   "math"
@@ -93,15 +94,22 @@ func main() {
     orderMap[order.String()] = &StatusOrder{order, ORDER_REMOVE}
   }
 
-  balance, err := client.Balance()
+  A, err := client.Balance(bitcoin.USD)
   if err != nil {
     fmt.Printf("Error balance: %v\n", err)
     return
   }
-  A := balance.Usd
-  b := balance.Btc
+  b, err := client.Balance(bitcoin.BTC)
+  if err != nil {
+    fmt.Printf("Error balance: %v\n", err)
+    return
+  }
   R := flagBtcRatio / (1 - flagBtcRatio)
-  F := balance.Fee / 100
+  F, err := client.Fee()
+  if err != nil {
+    fmt.Printf("Error fee: %v\n", err)
+    return
+  }
   if flagSpread < 200*F {
     fmt.Printf(
       "spread (%.2f%%) must be at least twice the fee (%.2f%%) "+
