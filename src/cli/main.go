@@ -7,7 +7,7 @@ import (
 )
 
 const (
-  COMMANDS = "{last, order_book, transactions, eur_usd, balance, " +
+  COMMANDS = "{last, order_book, transactions, balance, " +
     "user_transactions, open_orders, cancel_order, buy, sell}"
 )
 
@@ -29,8 +29,6 @@ func main() {
     orderBook()
   case "transactions":
     transactions()
-  case "eur_usd":
-    eurUsd()
   case "balance":
     balance()
   case "user_transactions":
