@@ -7,7 +7,7 @@ import (
 )
 
 const (
-  COMMANDS = "{ticker, last, order_book, transactions, eur_usd, balance, " +
+  COMMANDS = "{last, order_book, transactions, eur_usd, balance, " +
     "user_transactions, open_orders, cancel_order, buy, sell}"
 )
 
@@ -23,8 +23,6 @@ func main() {
   client.SetDryRun(flags.dryRun)
 
   switch flags.c {
-  case "ticker":
-    ticker()
   case "last":
     last()
   case "order_book":
