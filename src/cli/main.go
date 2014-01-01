@@ -1,6 +1,7 @@
 package main
 
 import (
+  "bitcoin"
   "bitstamp"
   "fmt"
   "os"
@@ -12,7 +13,7 @@ const (
 )
 
 var flags Flags
-var client *bitstamp.Client
+var client bitcoin.Client
 
 func main() {
   flags = initFlags()
