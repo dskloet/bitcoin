@@ -13,12 +13,6 @@ func (client *Client) Sell(price, amount float64) (err error) {
   params := client.createParams()
   params["amount"] = []string{fmt.Sprintf("%.8f", amount)}
   params["price"] = []string{fmt.Sprintf("%.2f", price)}
-
-  resp, err := postRequest(API_SELL, params)
-  if err != nil {
-    return
-  }
-  defer resp.Body.Close()
-
+  _, err = requestMap(API_SELL, params)
   return
 }

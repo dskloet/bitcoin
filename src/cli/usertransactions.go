@@ -1,15 +1,10 @@
 package main
 
 import (
-  "bitstamp"
   "fmt"
 )
 
 func userTransactions() {
-  client := bitstamp.NewClient(
-    flags.clientId,
-    flags.apiKey,
-    flags.apiSecret)
   transactions, err := client.UserTransactions()
   if err != nil {
     fmt.Printf("Error: %v\n", err)

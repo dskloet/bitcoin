@@ -1,13 +1,11 @@
 package main
 
 import (
-  "bitstamp"
   "bitcoin"
   "fmt"
 )
 
 func orderBook() {
-  var client bitstamp.Client
   bids, asks, err := client.OrderBook()
   if err != nil {
     fmt.Printf("Error: %v\n", err)

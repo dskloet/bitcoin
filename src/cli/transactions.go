@@ -1,13 +1,11 @@
 package main
 
 import (
-  "bitstamp"
   "fmt"
   "time"
 )
 
 func transactions() {
-  var client bitstamp.Client
   transactions, err := client.Transactions()
   if err != nil {
     fmt.Printf("Error: %v\n", err)

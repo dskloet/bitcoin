@@ -1,12 +1,10 @@
 package main
 
 import (
-  "bitstamp"
   "fmt"
 )
 
 func ticker() {
-  var client bitstamp.Client
   ticker, err := client.Ticker()
   if err != nil {
     fmt.Printf("Error: %v\n", err)
@@ -23,7 +21,6 @@ func ticker() {
 }
 
 func last() {
-  var client bitstamp.Client
   price, err := client.LastPrice()
   if err != nil {
     fmt.Printf("Error: %v\n", err)

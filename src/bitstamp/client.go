@@ -70,6 +70,21 @@ func postRequest(path string, params url.Values) (resp *http.Response, err error
   return httpClient.PostForm(API_URL+path, params)
 }
 
+func request(path string, params url.Values) (err error) {
+  resp, err := postRequest(path, params)
+  if err != nil {
+    return
+  }
+  result, err := readerToString(resp.Body)
+  if err != nil {
+    return
+  }
+  if result != "true" {
+    err = errors.New(result)
+  }
+  return
+}
+
 func requestMap(path string, params url.Values) (result resultMap, err error) {
   resp, err := postRequest(path, params)
   if err != nil {

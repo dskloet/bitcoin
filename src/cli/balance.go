@@ -2,16 +2,10 @@ package main
 
 import (
   "bitcoin"
-  "bitstamp"
   "fmt"
 )
 
 func balance() {
-  client := bitstamp.NewClient(
-    flags.clientId,
-    flags.apiKey,
-    flags.apiSecret)
-
   usd, err := client.Balance(bitcoin.USD)
   if err != nil {
     fmt.Printf("Error: %v\n", err)
