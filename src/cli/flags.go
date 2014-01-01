@@ -6,6 +6,7 @@ import (
 )
 
 type Flags struct {
+  exchange  string
   c         string
   dryRun    bool
   clientId  string
@@ -17,6 +18,8 @@ type Flags struct {
 }
 
 func initFlags() (flags Flags) {
+  flag.StringVar(
+    &flags.exchange, "exchange", "bitstamp", "Exchange from {bitstamp, btce}")
   flag.StringVar(&flags.c, "c", "ticker", "Command. Any from "+COMMANDS)
   flag.BoolVar(&flags.dryRun, "dry_run", false, "Don't make/cancel any order")
   flag.StringVar(

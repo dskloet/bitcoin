@@ -3,6 +3,7 @@ package main
 import (
   "bitcoin"
   "bitstamp"
+  "btce"
   "fmt"
   "os"
 )
@@ -17,10 +18,15 @@ var client bitcoin.Client
 
 func main() {
   flags = initFlags()
-  client = bitstamp.NewClient(
-    flags.clientId,
-    flags.apiKey,
-    flags.apiSecret)
+
+  if flags.exchange == "bitstamp" {
+    client = bitstamp.NewClient(
+      flags.clientId,
+      flags.apiKey,
+      flags.apiSecret)
+  } else if flags.exchange == "btce" {
+    client = btce.NewClient()
+  }
   client.SetDryRun(flags.dryRun)
 
   switch flags.c {
