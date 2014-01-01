@@ -1,8 +1,8 @@
 package btce
 
 import (
-  "errors"
   "bitcoin"
+  "errors"
 )
 
 type Client struct {
@@ -68,4 +68,3 @@ func (client *Client) UserTransactions() (
   err = errors.New("Not implemented")
   return
 }
-

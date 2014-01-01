@@ -9,4 +9,3 @@ type Transaction struct {
   Price  float64
   Amount float64
 }
-

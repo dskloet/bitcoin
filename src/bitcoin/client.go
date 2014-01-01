@@ -10,7 +10,6 @@ const (
 // A client for trading one specific currency (e.g. BTC) on one particular
 // exchange with prices expressed in another specific currency (e.g. USD).
 type Client interface {
-
   SetDryRun(dryRun bool)
 
   ///// Unauthenticated requests

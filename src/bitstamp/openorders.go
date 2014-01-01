@@ -28,7 +28,7 @@ func (client *Client) OpenOrders() (openOrders bitcoin.OrderList, err error) {
 }
 
 func mapToOrder(result resultMap) (order bitcoin.Order) {
-  price :=  result.getFloat("price")
+  price := result.getFloat("price")
   amount := result.getFloat("amount")
   orderType := result.getInt("type")
   if orderType == ORDER_BUY {
