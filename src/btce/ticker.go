@@ -6,11 +6,7 @@ type Ticker struct {
 
 func (client Client) LastPrice() (price float64, err error) {
   var tickerMap map[string]Ticker
-  resp, err := getRequest(API_TICKER)
-  if err != nil {
-    return
-  }
-  err = jsonParse(resp.Body, &tickerMap)
+  err = getRequest(API_TICKER, &tickerMap)
   if err != nil {
     return
   }

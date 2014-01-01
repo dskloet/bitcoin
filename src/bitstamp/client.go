@@ -51,27 +51,29 @@ func (client *Client) SetDryRun(dryRun bool) {
   client.dryRun = dryRun
 }
 
-func getRequest(path string) (resp *http.Response, err error) {
+func getRequest(path string, result interface{}) (err error) {
   var httpClient http.Client
-  return httpClient.Get(API_URL + path)
-}
-
-func getMap(path string) (result resultMap, err error) {
-  resp, err := getRequest(path)
+  resp, err := httpClient.Get(API_URL + path)
   if err != nil {
     return
   }
-  err = jsonParse(resp.Body, &result)
+  err = jsonParse(resp.Body, result)
   return
 }
 
-func postRequest(path string, params url.Values) (resp *http.Response, err error) {
+func postRequest(path string, params url.Values, result interface{}) (err error) {
   var httpClient http.Client
-  return httpClient.PostForm(API_URL+path, params)
+  resp, err := httpClient.PostForm(API_URL+path, params)
+  if err != nil {
+    return
+  }
+  err = jsonParse(resp.Body, result)
+  return
 }
 
 func request(path string, params url.Values) (err error) {
-  resp, err := postRequest(path, params)
+  var httpClient http.Client
+  resp, err := httpClient.PostForm(API_URL+path, params)
   if err != nil {
     return
   }
@@ -86,11 +88,10 @@ func request(path string, params url.Values) (err error) {
 }
 
 func requestMap(path string, params url.Values) (result resultMap, err error) {
-  resp, err := postRequest(path, params)
+  err = postRequest(path, params, &result)
   if err != nil {
     return
   }
-  err = jsonParse(resp.Body, &result)
   errorString := result["error"]
   if errorString != nil {
     err = errors.New(errorString.(string))

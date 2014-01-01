@@ -14,12 +14,8 @@ type unparsedOrderBook struct {
 func (client Client) OrderBook() (
   bids []bitcoin.Order, asks []bitcoin.Order, err error) {
 
-  resp, err := getRequest(API_ORDER_BOOK)
-  if err != nil {
-    return
-  }
   var unparsed unparsedOrderBook
-  err = jsonParse(resp.Body, &unparsed)
+  err = getRequest(API_ORDER_BOOK, &unparsed)
   if err != nil {
     return
   }

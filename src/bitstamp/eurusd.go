@@ -6,7 +6,8 @@ type EurUsd struct {
 }
 
 func (client Client) EurUsd() (eurUsd EurUsd, err error) {
-  result, err := getMap(API_EUR_USD)
+  var result resultMap
+  err = getRequest(API_EUR_USD, &result)
   if err != nil {
     return
   }

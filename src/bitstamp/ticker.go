@@ -25,7 +25,8 @@ func (client Client) Ticker() (ticker Ticker, err error) {
     return
   }
 
-  result, err := getMap(API_TICKER)
+  var result resultMap
+  err = getRequest(API_TICKER, &result)
   if err != nil {
     return
   }

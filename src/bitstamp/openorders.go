@@ -8,12 +8,8 @@ import (
 
 func (client *Client) OpenOrders() (openOrders bitcoin.OrderList, err error) {
   params := client.createParams()
-  resp, err := postRequest(API_OPEN_ORDERS, params)
-  if err != nil {
-    return
-  }
   var mapList []resultMap
-  err = jsonParse(resp.Body, &mapList)
+  err = postRequest(API_OPEN_ORDERS, params, &mapList)
   if err != nil {
     return
   }

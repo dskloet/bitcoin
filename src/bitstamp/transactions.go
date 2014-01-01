@@ -16,12 +16,8 @@ type unparsedTransaction struct {
 func (client Client) Transactions() (
   transactions []bitcoin.Transaction, err error) {
 
-  resp, err := getRequest(API_TRANSACTIONS)
-  if err != nil {
-    return
-  }
   var unparsed []unparsedTransaction
-  err = jsonParse(resp.Body, &unparsed)
+  err = getRequest(API_TRANSACTIONS, &unparsed)
   if err != nil {
     return
   }

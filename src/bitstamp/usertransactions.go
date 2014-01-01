@@ -22,12 +22,8 @@ func (client *Client) UserTransactions() (
   transactions []bitcoin.UserTransaction, err error) {
 
   params := client.createParams()
-  resp, err := postRequest(API_USER_TRANSACTIONS, params)
-  if err != nil {
-    return
-  }
   var unparsed []unparsedUserTransaction
-  err = jsonParse(resp.Body, &unparsed)
+  err = postRequest(API_USER_TRANSACTIONS, params, &unparsed)
   if err != nil {
     return
   }

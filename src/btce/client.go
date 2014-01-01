@@ -17,9 +17,14 @@ func NewClient() *Client {
   return &Client{}
 }
 
-func getRequest(path string) (resp *http.Response, err error) {
+func getRequest(path string, result interface{}) (err error) {
   var httpClient http.Client
-  return httpClient.Get(API_URL + path)
+  resp, err := httpClient.Get(API_URL + path)
+  if err != nil {
+    return
+  }
+  err = jsonParse(resp.Body, result)
+  return
 }
 
 func jsonParse(reader io.ReadCloser, result interface{}) (err error) {
