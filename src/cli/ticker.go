@@ -24,10 +24,10 @@ func ticker() {
 
 func last() {
   var client bitstamp.Client
-  rate, err := client.LastRate(flags.first, flags.second)
+  price, err := client.LastPrice()
   if err != nil {
     fmt.Printf("Error: %v\n", err)
     return
   }
-  fmt.Printf("%v/%v: %v\n", flags.first, flags.second, rate)
+  fmt.Printf("%v\n", price)
 }

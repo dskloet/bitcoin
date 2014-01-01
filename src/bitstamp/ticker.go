@@ -1,8 +1,6 @@
 package bitstamp
 
 import (
-  "bitcoin"
-  "errors"
   "time"
 )
 
@@ -42,23 +40,11 @@ func (client Client) Ticker() (ticker Ticker, err error) {
   }, nil
 }
 
-func (client Client) LastRate(first, second bitcoin.Currency) (
-  rate float64, err error) {
-
-  if first == second {
-    rate = 1
-    return
-  }
+func (client Client) LastPrice() (price float64, err error) {
   ticker, err := client.Ticker()
   if err != nil {
     return
   }
-  if first == bitcoin.BTC && second == bitcoin.USD {
-    rate = ticker.Last
-  } else if first == bitcoin.USD && second == bitcoin.BTC {
-    rate = 1 / ticker.Last
-  } else {
-    err = errors.New("Currency combination not supported")
-  }
+  price = ticker.Last
   return
 }
