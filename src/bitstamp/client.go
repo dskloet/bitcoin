@@ -20,7 +20,7 @@ type Client struct {
   nonce     int64
   DryRun    bool
 
-  tickerCache Ticker
+  tickerCache  Ticker
   balanceCache Balance
 }
 

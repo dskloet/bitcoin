@@ -29,5 +29,5 @@ func balance() {
   }
   fmt.Printf("USD: %.2f\n", usd)
   fmt.Printf("BTC: %.8f\n", btc)
-  fmt.Printf("Fee: %.2f%%\n", fee * 100)
+  fmt.Printf("Fee: %.2f%%\n", fee*100)
 }

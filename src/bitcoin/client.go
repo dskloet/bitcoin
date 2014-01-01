@@ -7,24 +7,14 @@ const (
   BTC = "btc"
 )
 
-type OrderId string
-
-type Order struct {
-  Id                    OrderId
-  Buy, Sell             Currency
-  BuyAmount, SellAmount float64
-}
-
+// A client for trading one specific currency (e.g. BTC) on one particular
+// exchange with prices expressed in another specific currency (e.g. USD).
 type Client interface {
 
   ///// Unauthenticated requests
 
-  // The price of the first expressed in the second currency.
-  LastRate(first, second Currency) (rate float64, err error)
-
-  // Returns the part of the order book consisting of orders buying and selling
-  // the given currencies.
-  OrderBook(buy, sell Currency) (orders []Order, err error)
+  LastPrice() (price float64, err error)
+  OrderBook() (bids []Order, asks []Order, err error)
 
   ///// Authenticated requests
 
@@ -32,12 +22,10 @@ type Client interface {
 
   Fee() (fee float64, err error)
 
-  // Creates a limit order to buy one currency for another at the rate of
-  // sellAmount / buyAmount.
-  Trade(buy, sell Currency, buyAmount, sellAmount float64) (err error)
+  Buy(price, amount float64) (err error)
+  Sell(price, amount float64) (err error)
 
   OpenOrders() (orders []Order, err error)
 
-  CancelOrder(order Order) (err error)
-  CancelOrderById(id string) (err error)
+  CancelOrder(id OrderId) (err error)
 }

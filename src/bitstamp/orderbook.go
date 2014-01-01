@@ -1,15 +1,9 @@
 package bitstamp
 
 import (
+  "bitcoin"
   "strconv"
-  "time"
 )
-
-type OrderBook struct {
-  Timestamp time.Time
-  Bids      []*Order
-  Asks      []*Order
-}
 
 type unparsedOrderBook struct {
   Timestamp string
@@ -17,7 +11,9 @@ type unparsedOrderBook struct {
   Asks      [][]string
 }
 
-func (client Client) OrderBook() (orderBook OrderBook, err error) {
+func (client Client) OrderBook() (
+  bids []bitcoin.Order, asks []bitcoin.Order, err error) {
+
   resp, err := getRequest(API_ORDER_BOOK)
   if err != nil {
     return
@@ -28,19 +24,13 @@ func (client Client) OrderBook() (orderBook OrderBook, err error) {
     return
   }
 
-  timestamp, err := strconv.ParseInt(unparsed.Timestamp, 10, 64)
-  if err != nil {
-    return
-  }
-  orderBook.Timestamp = time.Unix(timestamp, 0)
-
   for _, unparsedBid := range unparsed.Bids {
     var price, amount float64
     price, amount, err = parseFloatPair(unparsedBid)
     if err != nil {
       return
     }
-    orderBook.Bids = append(orderBook.Bids, NewBuyOrder(price, amount))
+    bids = append(bids, bitcoin.BuyOrder(price, amount))
   }
   for _, unparsedAsk := range unparsed.Asks {
     var price, amount float64
@@ -48,7 +38,7 @@ func (client Client) OrderBook() (orderBook OrderBook, err error) {
     if err != nil {
       return
     }
-    orderBook.Asks = append(orderBook.Asks, NewSellOrder(price, amount))
+    asks = append(asks, bitcoin.SellOrder(price, amount))
   }
   return
 }

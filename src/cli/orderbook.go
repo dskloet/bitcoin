@@ -2,33 +2,34 @@ package main
 
 import (
   "bitstamp"
+  "bitcoin"
   "fmt"
 )
 
 func orderBook() {
   var client bitstamp.Client
-  orderBook, err := client.OrderBook()
+  bids, asks, err := client.OrderBook()
   if err != nil {
     fmt.Printf("Error: %v\n", err)
     return
   }
   fmt.Printf("%s%20s\n", "Bids", "Asks")
-  bids := orderBookTable(orderBook.Bids)
-  asks := orderBookTable(orderBook.Asks)
-  for i := 0; i < len(bids) || i < len(asks); i++ {
+  bidsTable := orderBookTable(bids)
+  asksTable := orderBookTable(asks)
+  for i := 0; i < len(bidsTable) || i < len(asksTable); i++ {
     bid := ""
-    if i < len(bids) {
-      bid = bids[i]
+    if i < len(bidsTable) {
+      bid = bidsTable[i]
     }
     fmt.Printf("%20s", bid)
-    if i < len(asks) {
-      fmt.Printf("%20s", asks[i])
+    if i < len(asksTable) {
+      fmt.Printf("%20s", asksTable[i])
     }
     fmt.Printf("\n")
   }
 }
 
-func orderBookTable(orders []*bitstamp.Order) (output []string) {
+func orderBookTable(orders []bitcoin.Order) (output []string) {
   output = append(output, "      Price:  Amount")
   thresholdSteps := 0
   threshold := 0.5
