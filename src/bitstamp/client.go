@@ -52,8 +52,7 @@ func (client *Client) SetDryRun(dryRun bool) {
 }
 
 func getRequest(path string, result interface{}) (err error) {
-  var httpClient http.Client
-  resp, err := httpClient.Get(API_URL + path)
+  resp, err := http.Get(API_URL + path)
   if err != nil {
     return
   }
@@ -62,8 +61,7 @@ func getRequest(path string, result interface{}) (err error) {
 }
 
 func postRequest(path string, params url.Values, result interface{}) (err error) {
-  var httpClient http.Client
-  resp, err := httpClient.PostForm(API_URL+path, params)
+  resp, err := http.PostForm(API_URL+path, params)
   if err != nil {
     return
   }
@@ -72,8 +70,7 @@ func postRequest(path string, params url.Values, result interface{}) (err error)
 }
 
 func request(path string, params url.Values) (err error) {
-  var httpClient http.Client
-  resp, err := httpClient.PostForm(API_URL+path, params)
+  resp, err := http.PostForm(API_URL+path, params)
   if err != nil {
     return
   }

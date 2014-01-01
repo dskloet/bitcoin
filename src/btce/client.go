@@ -18,8 +18,7 @@ func NewClient() *Client {
 }
 
 func getRequest(path string, result interface{}) (err error) {
-  var httpClient http.Client
-  resp, err := httpClient.Get(API_URL + path)
+  resp, err := http.Get(API_URL + path)
   if err != nil {
     return
   }
