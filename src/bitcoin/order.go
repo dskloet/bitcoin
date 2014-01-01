@@ -1,5 +1,9 @@
 package bitcoin
 
+import (
+  "fmt"
+)
+
 type OrderId string
 type OrderType bool
 
@@ -31,4 +35,34 @@ func (order Order) Execute(client Client) error {
     return client.Buy(order.Price, order.Amount)
   }
   return client.Sell(order.Price, order.Amount)
+}
+
+func (order Order) verb() string {
+  if order.Type == BUY_ORDER {
+    return "Buy"
+  }
+  return "Sell"
+}
+
+func (order Order) String() string {
+  return fmt.Sprintf(
+    "%v %.8f at %.2f for %.2f",
+    order.verb(),
+    order.Amount,
+    order.Price,
+    order.Amount*order.Price)
+}
+
+type OrderList []Order
+
+func (list OrderList) Len() int {
+  return len(list)
+}
+
+func (list OrderList) Less(i, j int) bool {
+  return list[j].Price < list[i].Price
+}
+
+func (list OrderList) Swap(i, j int) {
+  list[i], list[j] = list[j], list[i]
 }

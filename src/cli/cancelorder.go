@@ -10,7 +10,7 @@ func cancelOrder() {
     flags.clientId,
     flags.apiKey,
     flags.apiSecret)
-  err := client.CancelOrderById(flags.id)
+  err := client.CancelOrder(flags.id)
   if err != nil {
     fmt.Printf("Error: %v\n", err)
     return

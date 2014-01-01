@@ -132,7 +132,7 @@ func main() {
   for _, order := range orderMap {
     err := order.Execute(client)
     if err != nil {
-      fmt.Printf("Error executing order: %v\n", order)
+      fmt.Printf("Error executing order: %v: %v\n", order, err)
     }
   }
 }

@@ -4,7 +4,7 @@ import (
   "fmt"
 )
 
-func (client *Client) Buy(amount, price float64) (err error) {
+func (client *Client) Buy(price, amount float64) (err error) {
   fmt.Printf("Buy %.8f at %.2f for %.2f\n", amount, price, amount*price)
   if client.DryRun {
     fmt.Printf("Skipped\n")

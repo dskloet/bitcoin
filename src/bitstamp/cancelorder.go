@@ -1,27 +1,20 @@
 package bitstamp
 
 import (
+  "bitcoin"
   "errors"
   "fmt"
 )
 
-func (client *Client) CancelOrder(order Order) (err error) {
-  if client.DryRun {
-    fmt.Printf("Skipping cancel order %v\n", order)
-    return
-  }
-  fmt.Printf("Cancel order %v\n", order)
-  err = client.CancelOrderById(order.Id)
-  return
-}
-
-func (client *Client) CancelOrderById(id int64) (err error) {
+func (client *Client) CancelOrder(id bitcoin.OrderId) (err error) {
   if client.DryRun {
     fmt.Printf("Skipping cancel order %v\n", id)
     return
+  } else {
+    fmt.Printf("Cancel order %v\n", id)
   }
   params := client.createParams()
-  params["id"] = []string{fmt.Sprintf("%d", id)}
+  params["id"] = []string{string(id)}
   resp, err := postRequest(API_CANCEL_ORDER, params)
   if err != nil {
     return

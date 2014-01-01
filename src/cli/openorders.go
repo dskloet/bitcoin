@@ -16,6 +16,6 @@ func openOrders() {
     return
   }
   for _, order := range orders {
-    fmt.Printf("%d: %v\n", order.Id, order)
+    fmt.Printf("%v: %v\n", order.Id, order)
   }
 }

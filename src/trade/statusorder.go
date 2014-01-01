@@ -1,6 +1,7 @@
 package main
 
 import (
+  "bitcoin"
   "bitstamp"
   "fmt"
 )
@@ -14,23 +15,16 @@ const (
 type OrderStatus int
 
 type StatusOrder struct {
-  bitstamp.Order
+  bitcoin.Order
   status OrderStatus
 }
 
-func NewOrder(orderType bitstamp.OrderType, price, amount float64) *StatusOrder {
-  return &StatusOrder{
-    *bitstamp.NewOrder(orderType, price, amount),
-    ORDER_NEW,
-  }
-}
-
 func NewBuyOrder(price, amount float64) *StatusOrder {
-  return NewOrder(bitstamp.ORDER_BUY, price, amount)
+  return &StatusOrder{bitcoin.BuyOrder(price, amount), ORDER_NEW}
 }
 
 func NewSellOrder(price, amount float64) *StatusOrder {
-  return NewOrder(bitstamp.ORDER_SELL, price, amount)
+  return &StatusOrder{bitcoin.SellOrder(price, amount), ORDER_NEW}
 }
 
 func (order StatusOrder) Execute(client *bitstamp.Client) (err error) {
@@ -39,11 +33,11 @@ func (order StatusOrder) Execute(client *bitstamp.Client) (err error) {
     return
   }
   if order.status == ORDER_REMOVE {
-    return client.CancelOrder(order.Order)
+    return client.CancelOrder(order.Order.Id)
   }
-  if order.Type == bitstamp.ORDER_BUY {
-    return client.Buy(order.Amount, order.Price)
+  if order.Type == bitcoin.BUY_ORDER {
+    return client.Buy(order.Price, order.Amount)
   } else {
-    return client.Sell(order.Amount, order.Price)
+    return client.Sell(order.Price, order.Amount)
   }
 }
