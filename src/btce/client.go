@@ -2,7 +2,12 @@ package btce
 
 import (
   "bitcoin"
+  "bytes"
+  "encoding/json"
   "errors"
+  "fmt"
+  "io"
+  "net/http"
 )
 
 type Client struct {
@@ -12,12 +17,26 @@ func NewClient() *Client {
   return &Client{}
 }
 
-func (client *Client) SetDryRun(dryRun bool) {
+func getRequest(path string) (resp *http.Response, err error) {
+  var httpClient http.Client
+  return httpClient.Get(API_URL + path)
 }
 
-func (client Client) LastPrice() (price float64, err error) {
-  err = errors.New("Not implemented")
+func jsonParse(reader io.ReadCloser, result interface{}) (err error) {
+  defer reader.Close()
+  buf := bytes.NewBuffer(nil)
+  _, err = io.Copy(buf, reader)
+  if err != nil {
+    return
+  }
+  err = json.Unmarshal(buf.Bytes(), result)
+  if err != nil {
+    err = errors.New(fmt.Sprintf("Couldn't parse json: %v", buf))
+  }
   return
+}
+
+func (client *Client) SetDryRun(dryRun bool) {
 }
 
 func (client Client) OrderBook() (
