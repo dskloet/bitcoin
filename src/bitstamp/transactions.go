@@ -1,16 +1,10 @@
 package bitstamp
 
 import (
+  "bitcoin"
   "strconv"
   "time"
 )
-
-type Transaction struct {
-  Date   time.Time
-  Tid    int64
-  Price  float64
-  Amount float64
-}
 
 type unparsedTransaction struct {
   Date   string
@@ -19,7 +13,9 @@ type unparsedTransaction struct {
   Amount string
 }
 
-func (client Client) Transactions() (transactions []Transaction, err error) {
+func (client Client) Transactions() (
+  transactions []bitcoin.Transaction, err error) {
+
   resp, err := getRequest(API_TRANSACTIONS)
   if err != nil {
     return
@@ -31,9 +27,9 @@ func (client Client) Transactions() (transactions []Transaction, err error) {
   }
 
   n := len(unparsed)
-  transactions = make([]Transaction, n)
+  transactions = make([]bitcoin.Transaction, n)
   for i, unparsedTx := range unparsed {
-    var transaction Transaction
+    var transaction bitcoin.Transaction
     transaction, err = parseTransaction(unparsedTx)
     if err != nil {
       return
@@ -44,7 +40,7 @@ func (client Client) Transactions() (transactions []Transaction, err error) {
 }
 
 func parseTransaction(
-  unparsed unparsedTransaction) (transaction Transaction, err error) {
+  unparsed unparsedTransaction) (transaction bitcoin.Transaction, err error) {
 
   timestamp, err := strconv.ParseInt(unparsed.Date, 10, 64)
   if err != nil {
@@ -59,9 +55,8 @@ func parseTransaction(
   if err != nil {
     return
   }
-  transaction = Transaction{
+  transaction = bitcoin.Transaction{
     Date:   date,
-    Tid:    unparsed.Tid,
     Price:  price,
     Amount: amount,
   }
