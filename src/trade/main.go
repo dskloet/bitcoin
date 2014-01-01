@@ -72,7 +72,7 @@ func feeRound(x, feeRate float64) float64 {
 func main() {
   initFlags()
   client := bitstamp.NewClient(flagClientId, flagApiKey, flagApiSecret)
-  client.DryRun = flagTest
+  client.SetDryRun(flagTest)
 
   openOrders, err := client.OpenOrders()
   if err != nil {

@@ -18,7 +18,7 @@ type Client struct {
   apiKey    string
   apiSecret string
   nonce     int64
-  DryRun    bool
+  dryRun    bool
 
   tickerCache  Ticker
   balanceCache Balance
@@ -45,6 +45,10 @@ func (client *Client) createParams() (params url.Values) {
   params["nonce"] = []string{nonce}
   params["signature"] = []string{fmt.Sprintf("%X", mac.Sum(nil))}
   return
+}
+
+func (client *Client) SetDryRun(dryRun bool) {
+  client.dryRun = dryRun
 }
 
 func getRequest(path string) (resp *http.Response, err error) {

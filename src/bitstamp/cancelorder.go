@@ -7,7 +7,7 @@ import (
 )
 
 func (client *Client) CancelOrder(id bitcoin.OrderId) (err error) {
-  if client.DryRun {
+  if client.dryRun {
     fmt.Printf("Skipping cancel order %v\n", id)
     return
   } else {

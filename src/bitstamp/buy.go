@@ -6,7 +6,7 @@ import (
 
 func (client *Client) Buy(price, amount float64) (err error) {
   fmt.Printf("Buy %.8f at %.2f for %.2f\n", amount, price, amount*price)
-  if client.DryRun {
+  if client.dryRun {
     fmt.Printf("Skipped\n")
     return
   }

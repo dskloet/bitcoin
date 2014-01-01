@@ -11,6 +11,8 @@ const (
 // exchange with prices expressed in another specific currency (e.g. USD).
 type Client interface {
 
+  SetDryRun(dryRun bool)
+
   ///// Unauthenticated requests
 
   LastPrice() (price float64, err error)
