@@ -27,7 +27,7 @@ type Client interface {
   Buy(price, amount float64) (err error)
   Sell(price, amount float64) (err error)
 
-  OpenOrders() (orders []Order, err error)
+  OpenOrders() (orders OrderList, err error)
 
   CancelOrder(id OrderId) (err error)
 }

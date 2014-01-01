@@ -2,7 +2,6 @@ package main
 
 import (
   "bitcoin"
-  "bitstamp"
   "fmt"
 )
 
@@ -27,7 +26,7 @@ func NewSellOrder(price, amount float64) *StatusOrder {
   return &StatusOrder{bitcoin.SellOrder(price, amount), ORDER_NEW}
 }
 
-func (order StatusOrder) Execute(client *bitstamp.Client) (err error) {
+func (order StatusOrder) Execute(client bitcoin.Client) (err error) {
   if order.status == ORDER_KEEP {
     fmt.Printf("Keep order %v\n", order)
     return

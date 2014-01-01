@@ -71,7 +71,8 @@ func feeRound(x, feeRate float64) float64 {
 
 func main() {
   initFlags()
-  client := bitstamp.NewClient(flagClientId, flagApiKey, flagApiSecret)
+  var client bitcoin.Client
+  client = bitstamp.NewClient(flagClientId, flagApiKey, flagApiSecret)
   client.SetDryRun(flagTest)
 
   openOrders, err := client.OpenOrders()
