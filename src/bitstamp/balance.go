@@ -33,7 +33,7 @@ func (client *Client) BitstampBalance() (balance Balance, err error) {
   if err != nil {
     return
   }
-  return Balance{
+  balance = Balance{
     Usd:          result.getFloat("usd_balance"),
     Btc:          result.getFloat("btc_balance"),
     UsdReserved:  result.getFloat("usd_reserved"),
@@ -42,7 +42,9 @@ func (client *Client) BitstampBalance() (balance Balance, err error) {
     BtcAvailable: result.getFloat("btc_available"),
     Fee:          result.getFloat("fee"),
     timestamp:    now,
-  }, nil
+  }
+  client.balanceCache = balance
+  return
 }
 
 func (client *Client) Balance(currency bitcoin.Currency) (

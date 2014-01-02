@@ -3,18 +3,68 @@ package btce
 import (
   "bitcoin"
   "bytes"
+  "crypto/hmac"
+  "crypto/sha512"
+  "encoding/hex"
   "encoding/json"
   "errors"
   "fmt"
   "io"
   "net/http"
+  "net/url"
+  "strings"
+  "time"
 )
 
 type Client struct {
+  apiKey    string
+  apiSecret string
+  nonce     int64
+
+  infoCache Info
 }
 
-func NewClient() *Client {
-  return &Client{}
+func NewClient(apiKey, apiSecret string) *Client {
+  return &Client{
+    apiKey:    apiKey,
+    apiSecret: apiSecret,
+    nonce:     time.Now().Unix(),
+  }
+}
+
+func (client *Client) createParams() (params url.Values) {
+  nonce := fmt.Sprintf("%v", client.nonce)
+  client.nonce++
+  params = make(url.Values)
+  params["nonce"] = []string{nonce}
+  return
+}
+
+func (client Client) postRequest(
+  method string, params url.Values, result interface{}) (err error) {
+
+  params["method"] = []string{method}
+  paramString := params.Encode()
+
+  mac := hmac.New(sha512.New, []byte(client.apiSecret))
+  mac.Write([]byte(paramString))
+  signature := hex.EncodeToString(mac.Sum(nil))
+
+  req, err := http.NewRequest("POST", TAPI_URL, strings.NewReader(paramString))
+  if err != nil {
+    return
+  }
+  req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+  req.Header.Set("Key", client.apiKey)
+  req.Header.Set("Sign", signature)
+
+  var httpClient http.Client
+  resp, err := httpClient.Do(req)
+  if err != nil {
+    return
+  }
+  err = jsonParse(resp.Body, result)
+  return
 }
 
 func getRequest(path string, result interface{}) (err error) {
@@ -35,7 +85,7 @@ func jsonParse(reader io.ReadCloser, result interface{}) (err error) {
   }
   err = json.Unmarshal(buf.Bytes(), result)
   if err != nil {
-    err = errors.New(fmt.Sprintf("Couldn't parse json: %v", buf))
+    err = errors.New(fmt.Sprintf("Couldn't parse json: %v: %v", err, buf))
   }
   return
 }
@@ -51,17 +101,6 @@ func (client Client) OrderBook() (
 
 func (client Client) Transactions() (
   transactions []bitcoin.Transaction, err error) {
-  err = errors.New("Not implemented")
-  return
-}
-
-func (client *Client) Balance(currency bitcoin.Currency) (
-  balance float64, err error) {
-  err = errors.New("Not implemented")
-  return
-}
-
-func (client *Client) Fee() (fee float64, err error) {
   err = errors.New("Not implemented")
   return
 }

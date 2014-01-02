@@ -25,7 +25,9 @@ func main() {
       flags.apiKey,
       flags.apiSecret)
   } else if flags.exchange == "btce" {
-    client = btce.NewClient()
+    client = btce.NewClient(
+      flags.apiKey,
+      flags.apiSecret)
   }
   client.SetDryRun(flags.dryRun)
 
