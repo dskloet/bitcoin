@@ -12,8 +12,8 @@ type activeOrdersResponse struct {
 }
 
 type activeOrderResponse struct {
-  Type string
-  Rate float64
+  Type   string
+  Rate   float64
   Amount float64
 }
 

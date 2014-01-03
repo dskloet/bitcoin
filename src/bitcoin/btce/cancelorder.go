@@ -25,4 +25,3 @@ func (client *Client) CancelOrder(id bitcoin.OrderId) (err error) {
   }
   return
 }
-
