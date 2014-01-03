@@ -76,12 +76,6 @@ func getRequest(path string, result interface{}) (err error) {
 func (client *Client) SetDryRun(dryRun bool) {
 }
 
-func (client Client) Transactions() (
-  transactions []bitcoin.Transaction, err error) {
-  err = errors.New("Not implemented")
-  return
-}
-
 func (client *Client) Buy(price, amount float64) (err error) {
   err = errors.New("Not implemented")
   return
