@@ -7,4 +7,5 @@ const (
   API_TRADES   = "trades"
   TAPI_URL     = "https://btc-e.com/tapi"
   API_GET_INFO = "getInfo"
+  API_TRADE    = "Trade"
 )
