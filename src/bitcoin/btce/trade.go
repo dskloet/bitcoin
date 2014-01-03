@@ -25,7 +25,7 @@ func (client *Client) trade(tradeType string, price, amount float64) (err error)
   if err != nil {
     return
   }
-  if resp.Success == 0 {
+  if resp.Success != 1 {
     err = errors.New(resp.Error)
   }
   return

@@ -9,4 +9,5 @@ const (
   API_GET_INFO      = "getInfo"
   API_TRADE         = "Trade"
   API_ACTIVE_ORDERS = "ActiveOrders"
+  API_CANCEL_ORDER  = "CancelOrder"
 )
