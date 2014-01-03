@@ -10,4 +10,5 @@ const (
   API_TRADE         = "Trade"
   API_ACTIVE_ORDERS = "ActiveOrders"
   API_CANCEL_ORDER  = "CancelOrder"
+  API_TRADE_HISTORY = "TradeHistory"
 )
