@@ -2,7 +2,7 @@ package main
 
 import (
   "bitcoin"
-  "bitstamp"
+  "bitcoin/bitstamp"
   "fmt"
   "math"
 )

@@ -2,8 +2,8 @@ package main
 
 import (
   "bitcoin"
-  "bitstamp"
-  "btce"
+  "bitcoin/bitstamp"
+  "bitcoin/btce"
   "fmt"
   "os"
 )
