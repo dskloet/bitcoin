@@ -18,6 +18,7 @@ type Client struct {
   apiSecret string
   nonce     int64
 
+  dryRun    bool
   infoCache Info
 }
 
@@ -74,6 +75,7 @@ func getRequest(path string, result interface{}) (err error) {
 }
 
 func (client *Client) SetDryRun(dryRun bool) {
+  client.dryRun = dryRun
 }
 
 func (client *Client) OpenOrders() (orders bitcoin.OrderList, err error) {
