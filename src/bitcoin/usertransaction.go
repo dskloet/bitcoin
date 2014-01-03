@@ -6,7 +6,7 @@ import (
 
 type UserTransaction struct {
   Datetime time.Time
-  Usd      float64
-  Btc      float64
+  Price    float64
+  Amount   float64
   Fee      float64
 }

@@ -52,9 +52,9 @@ func parseTransaction(
     return
   }
   transaction = bitcoin.Transaction{
-    Date:   date,
-    Price:  price,
-    Amount: amount,
+    Datetime: date,
+    Price:    price,
+    Amount:   amount,
   }
   return
 }

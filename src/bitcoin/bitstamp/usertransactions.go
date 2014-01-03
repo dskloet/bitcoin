@@ -63,8 +63,8 @@ func parseUserTransaction(unparsed unparsedUserTransaction) (
   }
   transaction = bitcoin.UserTransaction{
     Datetime: datetime,
-    Usd:      usd,
-    Btc:      btc,
+    Price:    -usd / btc,
+    Amount:   btc,
     Fee:      fee,
   }
   return

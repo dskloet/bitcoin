@@ -5,7 +5,7 @@ import (
 )
 
 type Transaction struct {
-  Date   time.Time
-  Price  float64
-  Amount float64
+  Datetime time.Time
+  Price    float64
+  Amount   float64
 }

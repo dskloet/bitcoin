@@ -8,14 +8,15 @@ import (
 
 type tradeHistoryResponse struct {
   Success int
-  Error string
-  Return map[string]userTrade
+  Error   string
+  Return  map[string]userTrade
 }
 
 type userTrade struct {
+  Type      string
   Timestamp int64
-  Rate float64
-  Amount float64
+  Rate      float64
+  Amount    float64
 }
 
 func (client *Client) UserTransactions() (
@@ -35,11 +36,15 @@ func (client *Client) UserTransactions() (
   for _, trade := range resp.Return {
     datetime := time.Unix(trade.Timestamp, 0)
     fee, _ := client.Fee()
-    transactions = append(transactions, bitcoin.UserTransaction {
+    amount := trade.Amount
+    if trade.Type == "sell" {
+      amount = -amount
+    }
+    transactions = append(transactions, bitcoin.UserTransaction{
       Datetime: datetime,
-      Usd: trade.Rate * trade.Amount,
-      Btc: trade.Amount,
-      Fee: trade.Rate * trade.Amount * fee,
+      Price:    trade.Rate,
+      Amount:   amount,
+      Fee:      trade.Rate * trade.Amount * fee,
     })
   }
   return

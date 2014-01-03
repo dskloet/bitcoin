@@ -24,9 +24,9 @@ func (client Client) Transactions() (
   for i, tx := range txs {
     date := time.Unix(tx.Date, 0)
     transactions[n-1-i] = bitcoin.Transaction{
-      Date:   date,
-      Price:  tx.Price,
-      Amount: tx.Amount,
+      Datetime: date,
+      Price:    tx.Price,
+      Amount:   tx.Amount,
     }
   }
   return
