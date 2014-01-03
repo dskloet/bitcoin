@@ -2,6 +2,7 @@ package main
 
 import (
   "bitcoin"
+  "bitcoin/bitfinex"
   "bitcoin/bitstamp"
   "bitcoin/btce"
   "fmt"
@@ -28,6 +29,8 @@ func main() {
     client = btce.NewClient(
       flags.apiKey,
       flags.apiSecret)
+  } else if flags.exchange == "bitfinex" {
+    client = bitfinex.NewClient()
   }
   client.SetDryRun(flags.dryRun)
 
