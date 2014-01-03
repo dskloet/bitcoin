@@ -7,8 +7,8 @@ import (
 )
 
 type Info struct {
-  Success int
-  Return  InfoReturn
+  Success   int
+  Return    InfoReturn
   timestamp time.Time
 }
 
@@ -60,4 +60,3 @@ func (client *Client) Balance(
 func (client *Client) Fee() (fee float64, err error) {
   return 0.002, nil
 }
-

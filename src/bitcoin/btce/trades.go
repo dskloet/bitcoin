@@ -31,4 +31,3 @@ func (client Client) Transactions() (
   }
   return
 }
-
