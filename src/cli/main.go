@@ -5,6 +5,7 @@ import (
   "bitcoin/bitfinex"
   "bitcoin/bitstamp"
   "bitcoin/btce"
+  "bitcoin/kraken"
   "fmt"
   "os"
 )
@@ -31,6 +32,8 @@ func main() {
       flags.apiSecret)
   } else if flags.exchange == "bitfinex" {
     client = bitfinex.NewClient()
+  } else if flags.exchange == "kraken" {
+    client = kraken.NewClient()
   }
   client.SetDryRun(flags.dryRun)
 
