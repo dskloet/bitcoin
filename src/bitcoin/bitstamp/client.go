@@ -1,10 +1,10 @@
 package bitstamp
 
 import (
+  "bitcoin"
   "bytes"
   "crypto/hmac"
   "crypto/sha256"
-  "encoding/json"
   "errors"
   "fmt"
   "io"
@@ -56,7 +56,7 @@ func getRequest(path string, result interface{}) (err error) {
   if err != nil {
     return
   }
-  err = jsonParse(resp.Body, result)
+  err = bitcoin.JsonParse(resp.Body, result)
   return
 }
 
@@ -65,7 +65,7 @@ func postRequest(path string, params url.Values, result interface{}) (err error)
   if err != nil {
     return
   }
-  err = jsonParse(resp.Body, result)
+  err = bitcoin.JsonParse(resp.Body, result)
   return
 }
 
@@ -92,20 +92,6 @@ func requestMap(path string, params url.Values) (result resultMap, err error) {
   errorString := result["error"]
   if errorString != nil {
     err = errors.New(errorString.(string))
-  }
-  return
-}
-
-func jsonParse(reader io.ReadCloser, result interface{}) (err error) {
-  defer reader.Close()
-  buf := bytes.NewBuffer(nil)
-  _, err = io.Copy(buf, reader)
-  if err != nil {
-    return
-  }
-  err = json.Unmarshal(buf.Bytes(), result)
-  if err != nil {
-    err = errors.New(fmt.Sprintf("Couldn't parse json: %v", buf))
   }
   return
 }
