@@ -1,8 +1,8 @@
 package bitfinex
 
 import (
-  "errors"
   "bitcoin"
+  "errors"
 )
 
 type Client struct {

@@ -22,8 +22,8 @@ type userTrade struct {
 func (client *Client) UserTransactions() (
   transactions []bitcoin.UserTransaction, err error) {
   params := client.createParams()
-  params["pair"] = []string{"btc_usd"}
-  params["order"] = []string{"ASC"}
+  params.Set("pair", "btc_usd")
+  params.Set("order", "ASC")
   var resp tradeHistoryResponse
   err = client.postRequest(API_TRADE_HISTORY, params, &resp)
   if err != nil {

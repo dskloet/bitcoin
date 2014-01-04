@@ -16,10 +16,10 @@ func (client *Client) trade(tradeType string, price, amount float64) (err error)
     return
   }
   params := client.createParams()
-  params["pair"] = []string{"btc_usd"}
-  params["type"] = []string{tradeType}
-  params["rate"] = []string{fmt.Sprintf("%.3f", price)}
-  params["amount"] = []string{fmt.Sprintf("%.8f", amount)}
+  params.Set("pair", "btc_usd")
+  params.Set("type", tradeType)
+  params.Set("rate", fmt.Sprintf("%.3f", price))
+  params.Set("amount", fmt.Sprintf("%.8f", amount))
   var resp tradeResponse
   err = client.postRequest(API_TRADE, params, &resp)
   if err != nil {

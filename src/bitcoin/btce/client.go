@@ -33,14 +33,14 @@ func (client *Client) createParams() (params url.Values) {
   nonce := fmt.Sprintf("%v", client.nonce)
   client.nonce++
   params = make(url.Values)
-  params["nonce"] = []string{nonce}
+  params.Set("nonce", nonce)
   return
 }
 
 func (client Client) postRequest(
   method string, params url.Values, result interface{}) (err error) {
 
-  params["method"] = []string{method}
+  params.Set("method", method)
   paramString := params.Encode()
 
   mac := hmac.New(sha512.New, []byte(client.apiSecret))
