@@ -1,23 +1,44 @@
 package bitfinex
 
 import (
-  "errors"
   "bitcoin"
+  "crypto/tls"
+  "errors"
+  "fmt"
+  "net/http"
+  "net/url"
 )
 
 type Client struct {
+  currencyPair string
+  insecureSkipVerify bool
 }
 
-func NewClient() *Client {
-  return &Client{}
+func NewClient(insecureSkipVerify bool) *Client {
+  return &Client{
+    currencyPair: "btcusd",
+    insecureSkipVerify: insecureSkipVerify,
+  }
+}
+
+func (client *Client) getRequest(path string, result interface{}) (err error) {
+  tr := &http.Transport{
+    TLSClientConfig: &tls.Config{InsecureSkipVerify : client.insecureSkipVerify},
+  }
+  httpClient := &http.Client{Transport: tr}
+  resp, err := httpClient.Get(API_URL + path + client.currencyPair)
+  if err != nil {
+    if _, ok := err.(*url.Error); ok {
+      fmt.Printf("MacOSX may have problems with SSL certificates. " +
+          "Try disabling certificate verification at your own risk.\n")
+    }
+    return
+  }
+  err = bitcoin.JsonParse(resp.Body, result)
+  return
 }
 
 func (client *Client) SetDryRun(dryRun bool) {
-}
-
-func (client Client) LastPrice() (price float64, err error) {
-  err = errors.New("Not implemented")
-  return
 }
 
 func (client Client) OrderBook() (
