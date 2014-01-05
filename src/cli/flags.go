@@ -41,7 +41,7 @@ func initFlags() (flags Flags) {
   flag.Float64Var(&flags.amount, "amount", 0, "Amount for buy/sell orders")
 
   flag.BoolVar(&flags.insecureSkipVerify, "insecure_skip_verify", false,
-      "Disable SSL certificate verificate for some exchanges that may otherwise " +
+    "Disable SSL certificate verificate for some exchanges that may otherwise "+
       "not work on MacOSX.")
   flag.Parse()
   return

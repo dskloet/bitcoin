@@ -8,13 +8,13 @@ import (
 )
 
 type balanceResponse struct {
-  Type string
+  Type     string
   Currency string
-  Amount string
+  Amount   string
 }
 
 type balances struct {
-  response []balanceResponse
+  response  []balanceResponse
   timestamp time.Time
 }
 

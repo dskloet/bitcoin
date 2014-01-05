@@ -22,12 +22,12 @@ type Client struct {
   nonce     int64
 
   currencyPair string
-  http *http.Client
+  http         *http.Client
 }
 
 func NewClient(apiKey, apiSecret string, insecureSkipVerify bool) *Client {
   tr := &http.Transport{
-    TLSClientConfig: &tls.Config{InsecureSkipVerify : insecureSkipVerify},
+    TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureSkipVerify},
   }
   httpClient := &http.Client{Transport: tr}
 
@@ -37,7 +37,7 @@ func NewClient(apiKey, apiSecret string, insecureSkipVerify bool) *Client {
     nonce:     time.Now().UnixNano() / 1000000,
 
     currencyPair: "btcusd",
-    http: httpClient,
+    http:         httpClient,
   }
 }
 
@@ -63,7 +63,7 @@ func (client Client) postRequest(
   mac.Write([]byte(payload))
   signature := hex.EncodeToString(mac.Sum(nil))
 
-  req, err := http.NewRequest("POST", API_URL + path, strings.NewReader(""))
+  req, err := http.NewRequest("POST", API_URL+path, strings.NewReader(""))
   if err != nil {
     return
   }
@@ -92,7 +92,7 @@ func (client *Client) hasError(err error) bool {
   if err != nil {
     if _, ok := err.(*url.Error); ok {
       fmt.Printf("MacOSX may have problems with SSL certificates. " +
-          "Try disabling certificate verification at your own risk.\n")
+        "Try disabling certificate verification at your own risk.\n")
     }
   }
   return err != nil
