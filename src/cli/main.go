@@ -30,7 +30,10 @@ func main() {
       flags.apiKey,
       flags.apiSecret)
   } else if flags.exchange == "bitfinex" {
-    client = bitfinex.NewClient(flags.insecureSkipVerify)
+    client = bitfinex.NewClient(
+      flags.apiKey,
+      flags.apiSecret,
+      flags.insecureSkipVerify)
   }
   client.SetDryRun(flags.dryRun)
 
