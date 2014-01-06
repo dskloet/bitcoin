@@ -41,16 +41,16 @@ func NewClient(apiKey, apiSecret string, insecureSkipVerify bool) *Client {
   }
 }
 
-func (client *Client) createParams() (params map[string]string) {
+func (client *Client) createParams() (params map[string]interface{}) {
   nonce := fmt.Sprintf("%v", client.nonce)
   client.nonce++
-  params = make(map[string]string)
+  params = make(map[string]interface{})
   params["nonce"] = nonce
   return
 }
 
 func (client Client) postRequest(
-  path string, params map[string]string, result interface{}) (err error) {
+  path string, params map[string]interface{}, result interface{}) (err error) {
 
   params["request"] = "/v1/" + path
   paramJson, err := json.Marshal(params)
@@ -125,11 +125,6 @@ func (client *Client) Buy(price, amount float64) (err error) {
 }
 
 func (client *Client) Sell(price, amount float64) (err error) {
-  err = errors.New("Not implemented")
-  return
-}
-
-func (client *Client) CancelOrder(id bitcoin.OrderId) (err error) {
   err = errors.New("Not implemented")
   return
 }

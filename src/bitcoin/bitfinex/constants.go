@@ -5,4 +5,5 @@ const (
   API_TICKER       = "ticker/"
   API_BALANCE      = "balances"
   API_ORDERS       = "orders"
+  API_ORDER_CANCEL = "order/cancel"
 )
