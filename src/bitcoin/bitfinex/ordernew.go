@@ -25,9 +25,19 @@ func (client *Client) newOrder(side string, price, amount float64) (err error) {
 }
 
 func (client *Client) Buy(price, amount float64) (err error) {
+  fmt.Printf("Buy %.8f at %.5f for %.8f\n", amount, price, amount*price)
+  if client.dryRun {
+    fmt.Printf("Skipped\n")
+    return
+  }
   return client.newOrder("buy", price, amount)
 }
 
 func (client *Client) Sell(price, amount float64) (err error) {
+  fmt.Printf("Sell %.8f at %.5f for %.8f\n", amount, price, amount*price)
+  if client.dryRun {
+    fmt.Printf("Skipped\n")
+    return
+  }
   return client.newOrder("sell", price, amount)
 }

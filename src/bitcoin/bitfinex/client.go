@@ -20,6 +20,7 @@ type Client struct {
   apiKey    string
   apiSecret string
   nonce     int64
+  dryRun    bool
 
   currencyPair string
   http         *http.Client
@@ -99,6 +100,7 @@ func (client *Client) hasError(err error) bool {
 }
 
 func (client *Client) SetDryRun(dryRun bool) {
+  client.dryRun = dryRun
 }
 
 func (client Client) OrderBook() (
