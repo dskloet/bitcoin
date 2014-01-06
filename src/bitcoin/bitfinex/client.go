@@ -114,7 +114,8 @@ func (client Client) Transactions() (
 }
 
 func (client *Client) Fee() (fee float64, err error) {
-  err = errors.New("Not implemented")
+  // Fee is not (yet?) available through API on Bitfinex.
+  fee = 0.0012
   return
 }
 
