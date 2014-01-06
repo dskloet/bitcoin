@@ -6,4 +6,5 @@ const (
   API_BALANCE      = "balances"
   API_ORDERS       = "orders"
   API_ORDER_CANCEL = "order/cancel"
+  API_ORDER_NEW    = "order/new"
 )

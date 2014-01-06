@@ -119,16 +119,6 @@ func (client *Client) Fee() (fee float64, err error) {
   return
 }
 
-func (client *Client) Buy(price, amount float64) (err error) {
-  err = errors.New("Not implemented")
-  return
-}
-
-func (client *Client) Sell(price, amount float64) (err error) {
-  err = errors.New("Not implemented")
-  return
-}
-
 func (client *Client) UserTransactions() (
   transactions []bitcoin.UserTransaction, err error) {
   err = errors.New("Not implemented")
