@@ -9,10 +9,10 @@ import (
 type ordersResponse []orderResponse
 
 type orderResponse struct {
-  Id int64
-  Price string
+  Id               int64
+  Price            string
   Remaining_amount string
-  Side string
+  Side             string
 }
 
 func (client *Client) OpenOrders() (orders bitcoin.OrderList, err error) {
@@ -35,14 +35,13 @@ func (client *Client) OpenOrders() (orders bitcoin.OrderList, err error) {
       return
     }
     switch responseOrder.Side {
-      case "buy":
-        order = bitcoin.BuyOrder(price, amount)
-      case "sell":
-        order = bitcoin.SellOrder(price, amount)
+    case "buy":
+      order = bitcoin.BuyOrder(price, amount)
+    case "sell":
+      order = bitcoin.SellOrder(price, amount)
     }
     order.Id = bitcoin.OrderId(fmt.Sprintf("%d", responseOrder.Id))
     orders = append(orders, order)
   }
   return
 }
-
