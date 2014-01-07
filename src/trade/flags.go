@@ -12,6 +12,7 @@ var flagApiKey string
 var flagApiSecret string
 var flagSpread float64
 var flagBtcRatio float64
+var flagFeeRound bool
 
 func initFlags() {
   flag.BoolVar(&flagTest, "test", false, "Don't change any orders. Just output.")
@@ -22,6 +23,9 @@ func initFlags() {
     &flagSpread, "spread", 2.0, "Percentage distance between buy/sell price")
   flag.Float64Var(
     &flagBtcRatio, "btc_ratio", 0.5, "Ratio of capital that should be BTC")
+  flag.BoolVar(
+    &flagFeeRound, "fee_round", false,
+    "Round order size up such that the fee is an integer number of cents.")
   flag.Parse()
 
   if flagApiKey == "" || flagApiSecret == "" || flagClientId == "" {
