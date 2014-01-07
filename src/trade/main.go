@@ -2,9 +2,11 @@ package main
 
 import (
   "bitcoin"
+  "bitcoin/bitfinex"
   "bitcoin/bitstamp"
   "fmt"
   "math"
+  "os"
 )
 
 type OrderMap map[string]*StatusOrder
@@ -78,7 +80,14 @@ func feeRound(x, feeRate float64) float64 {
 func main() {
   initFlags()
   var client bitcoin.Client
-  client = bitstamp.NewClient(flagClientId, flagApiKey, flagApiSecret)
+  if flagExchange == "bitstamp" {
+    client = bitstamp.NewClient(flagClientId, flagApiKey, flagApiSecret)
+  } else if flagExchange == "bitfinex" {
+    client = bitfinex.NewClient(flagApiKey, flagApiSecret)
+  } else {
+    fmt.Printf("Unknown exchange: %v\n", flagExchange)
+    os.Exit(1)
+  }
   client.SetDryRun(flagTest)
 
   openOrders, err := client.OpenOrders()

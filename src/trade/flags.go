@@ -7,6 +7,7 @@ import (
 )
 
 var flagTest bool
+var flagExchange string
 var flagClientId string
 var flagApiKey string
 var flagApiSecret string
@@ -16,6 +17,7 @@ var flagFeeRound bool
 
 func initFlags() {
   flag.BoolVar(&flagTest, "test", false, "Don't change any orders. Just output.")
+  flag.StringVar(&flagExchange, "exchange", "bitstamp", "Exchange to connect to.")
   flag.StringVar(&flagApiKey, "api_key", "", "Bitstamp API key")
   flag.StringVar(&flagApiSecret, "api_secret", "", "Bitstamp API secret")
   flag.StringVar(&flagClientId, "client_id", "", "Bitstamp client ID")
