@@ -4,7 +4,6 @@ import (
   "bitcoin"
   "crypto/hmac"
   "crypto/sha512"
-  "crypto/tls"
   "encoding/base64"
   "encoding/hex"
   "encoding/json"
@@ -23,22 +22,15 @@ type Client struct {
   dryRun    bool
 
   currencyPair string
-  http         *http.Client
 }
 
-func NewClient(apiKey, apiSecret string, insecureSkipVerify bool) *Client {
-  tr := &http.Transport{
-    TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureSkipVerify},
-  }
-  httpClient := &http.Client{Transport: tr}
-
+func NewClient(apiKey, apiSecret string) *Client {
   return &Client{
     apiKey:    apiKey,
     apiSecret: apiSecret,
     nonce:     time.Now().UnixNano() / 1000000,
 
     currencyPair: "btcusd",
-    http:         httpClient,
   }
 }
 
@@ -72,7 +64,8 @@ func (client Client) postRequest(
   req.Header.Set("X-BFX-PAYLOAD", payload)
   req.Header.Set("X-BFX-SIGNATURE", signature)
 
-  resp, err := client.http.Do(req)
+  var httpClient http.Client
+  resp, err := httpClient.Do(req)
   if client.hasError(err) {
     return
   }
@@ -81,7 +74,7 @@ func (client Client) postRequest(
 }
 
 func (client *Client) getRequest(path string, result interface{}) (err error) {
-  resp, err := client.http.Get(API_URL + path + client.currencyPair)
+  resp, err := http.Get(API_URL + path + client.currencyPair)
   if client.hasError(err) {
     return
   }

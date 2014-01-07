@@ -15,9 +15,6 @@ type Flags struct {
   id        bitcoin.OrderId
   price     float64
   amount    float64
-
-  // For bitfinex:
-  insecureSkipVerify bool
 }
 
 func initFlags() (flags Flags) {
@@ -40,9 +37,6 @@ func initFlags() (flags Flags) {
   flag.Float64Var(&flags.price, "price", 0, "Price for buy/sell orders")
   flag.Float64Var(&flags.amount, "amount", 0, "Amount for buy/sell orders")
 
-  flag.BoolVar(&flags.insecureSkipVerify, "insecure_skip_verify", false,
-    "Disable SSL certificate verificate for some exchanges that may otherwise "+
-      "not work on MacOSX.")
   flag.Parse()
   return
 }

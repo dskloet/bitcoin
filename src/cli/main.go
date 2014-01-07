@@ -32,8 +32,7 @@ func main() {
   } else if flags.exchange == "bitfinex" {
     client = bitfinex.NewClient(
       flags.apiKey,
-      flags.apiSecret,
-      flags.insecureSkipVerify)
+      flags.apiSecret)
   }
   client.SetDryRun(flags.dryRun)
 
