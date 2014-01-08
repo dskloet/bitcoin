@@ -10,7 +10,7 @@ type tickerResponse struct {
 
 func (client Client) LastPrice() (price float64, err error) {
   var resp tickerResponse
-  err = client.getRequest(API_TICKER, &resp)
+  err = client.getRequest(API_TICKER + client.currencyPair, &resp)
   if err != nil {
     return
   }

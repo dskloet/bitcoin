@@ -73,7 +73,7 @@ func (client Client) postRequest(
 }
 
 func (client *Client) getRequest(path string, result interface{}) (err error) {
-  resp, err := http.Get(API_URL + path + client.currencyPair)
+  resp, err := http.Get(API_URL + path)
   if err != nil {
     return
   }
@@ -83,12 +83,6 @@ func (client *Client) getRequest(path string, result interface{}) (err error) {
 
 func (client *Client) SetDryRun(dryRun bool) {
   client.dryRun = dryRun
-}
-
-func (client Client) OrderBook() (
-  bids []bitcoin.Order, asks []bitcoin.Order, err error) {
-  err = errors.New("Not implemented")
-  return
 }
 
 func (client Client) Transactions() (
