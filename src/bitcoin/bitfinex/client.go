@@ -10,7 +10,6 @@ import (
   "errors"
   "fmt"
   "net/http"
-  "net/url"
   "strings"
   "time"
 )
@@ -66,7 +65,7 @@ func (client Client) postRequest(
 
   var httpClient http.Client
   resp, err := httpClient.Do(req)
-  if client.hasError(err) {
+  if err != nil {
     return
   }
   err = bitcoin.JsonParse(resp.Body, result)
@@ -75,21 +74,11 @@ func (client Client) postRequest(
 
 func (client *Client) getRequest(path string, result interface{}) (err error) {
   resp, err := http.Get(API_URL + path + client.currencyPair)
-  if client.hasError(err) {
+  if err != nil {
     return
   }
   err = bitcoin.JsonParse(resp.Body, result)
   return
-}
-
-func (client *Client) hasError(err error) bool {
-  if err != nil {
-    if _, ok := err.(*url.Error); ok {
-      fmt.Printf("MacOSX may have problems with SSL certificates. " +
-        "Try disabling certificate verification at your own risk.\n")
-    }
-  }
-  return err != nil
 }
 
 func (client *Client) SetDryRun(dryRun bool) {
