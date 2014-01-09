@@ -85,12 +85,6 @@ func (client *Client) SetDryRun(dryRun bool) {
   client.dryRun = dryRun
 }
 
-func (client Client) Transactions() (
-  transactions []bitcoin.Transaction, err error) {
-  err = errors.New("Not implemented")
-  return
-}
-
 func (client *Client) Fee() (fee float64, err error) {
   // Fee is not (yet?) available through API on Bitfinex.
   fee = 0.0012
