@@ -7,7 +7,6 @@ import (
   "encoding/base64"
   "encoding/hex"
   "encoding/json"
-  "errors"
   "fmt"
   "net/http"
   "strings"
@@ -88,11 +87,5 @@ func (client *Client) SetDryRun(dryRun bool) {
 func (client *Client) Fee() (fee float64, err error) {
   // Fee is not (yet?) available through API on Bitfinex.
   fee = 0.0012
-  return
-}
-
-func (client *Client) UserTransactions() (
-  transactions []bitcoin.UserTransaction, err error) {
-  err = errors.New("Not implemented")
   return
 }

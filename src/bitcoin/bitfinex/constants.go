@@ -6,6 +6,7 @@ const (
   API_BOOK         = "book/"
   API_TRADES       = "trades/"
   API_BALANCE      = "balances"
+  API_MYTRADES     = "mytrades"
   API_ORDERS       = "orders"
   API_ORDER_CANCEL = "order/cancel"
   API_ORDER_NEW    = "order/new"

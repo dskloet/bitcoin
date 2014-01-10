@@ -32,6 +32,9 @@ func (client Client) Transactions() (
     }
     var transaction bitcoin.Transaction
     transaction, err = parseTrade(trade)
+    if err != nil {
+      return
+    }
     transactions = append(transactions, transaction)
   }
   return
