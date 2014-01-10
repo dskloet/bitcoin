@@ -19,7 +19,7 @@ func (client Client) OrderBook() (
   bids []bitcoin.Order, asks []bitcoin.Order, err error) {
 
   var resp bookResponse
-  err = client.getRequest(API_BOOK + client.currencyPair, &resp)
+  err = client.getRequest(API_BOOK+client.currencyPair, &resp)
   if err != nil {
     return
   }
@@ -33,7 +33,7 @@ func (client Client) OrderBook() (
 
 func parseOrders(
   orders []bookOrderResponse,
-  factory func(price, amount float64)bitcoin.Order,
+  factory func(price, amount float64) bitcoin.Order,
   out *[]bitcoin.Order) (err error) {
 
   for _, order := range orders {

@@ -14,12 +14,11 @@ type tradeResponse struct {
   Timestamp int64
 }
 
-
 func (client Client) Transactions() (
   transactions []bitcoin.Transaction, err error) {
 
   var resp []tradeResponse
-  err = client.getRequest(API_TRADES + client.currencyPair +
+  err = client.getRequest(API_TRADES+client.currencyPair+
     fmt.Sprintf("?timestamp=%d&limit_trades=1000",
       time.Now().Add(-time.Hour).Unix()), &resp)
   if err != nil {
@@ -27,7 +26,7 @@ func (client Client) Transactions() (
   }
   n := len(resp)
   for i, _ := range resp {
-    trade := resp[n - 1 - i]
+    trade := resp[n-1-i]
     if trade.Exchange != "bitfinex" {
       continue
     }
