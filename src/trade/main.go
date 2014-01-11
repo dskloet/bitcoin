@@ -120,6 +120,8 @@ func main() {
     fmt.Printf("Error balance: %v\n", err)
     return
   }
+  A += flagOffsetUsd
+  b += flagOffsetBtc
   R := flagBtcRatio / (1 - flagBtcRatio)
   F, err := client.Fee()
   if err != nil {
@@ -136,11 +138,10 @@ func main() {
 
   previousRate := R * A / b
 
-  fmt.Printf("Creating new bitstamp orders.\n")
+  fmt.Printf("Rate = %.2f\n", previousRate)
   fmt.Printf("USD = %v\n", A)
   fmt.Printf("BTC = %v\n", b)
   fmt.Printf("Fee = %v\n", F)
-  fmt.Printf("Rate = %.2f\n", previousRate)
 
   placeBuyOrders(A, b, R, F, s, orderMap)
   placeSellOrders(A, b, R, F, s, orderMap)

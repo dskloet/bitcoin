@@ -14,6 +14,8 @@ var flagApiSecret string
 var flagSpread float64
 var flagBtcRatio float64
 var flagFeeRound bool
+var flagOffsetUsd float64
+var flagOffsetBtc float64
 
 func initFlags() {
   flag.BoolVar(&flagTest, "test", false, "Don't change any orders. Just output.")
@@ -28,10 +30,16 @@ func initFlags() {
   flag.BoolVar(
     &flagFeeRound, "fee_round", false,
     "Round order size up such that the fee is an integer number of cents.")
+  flag.Float64Var(
+    &flagOffsetUsd, "offset_usd", 0,
+    "Offset the USD balance before determining which orders to make.")
+  flag.Float64Var(
+    &flagOffsetBtc, "offset_btc", 0,
+    "Offset the BTC balance before determining which orders to make.")
   flag.Parse()
 
-  if flagApiKey == "" || flagApiSecret == "" || flagClientId == "" {
-    fmt.Printf("--api_key, --api_secret, --client_id must all be specified\n")
+  if flagApiKey == "" || flagApiSecret == "" {
+    fmt.Printf("--api_key and --api_secret be specified\n")
     os.Exit(1)
   }
 }
