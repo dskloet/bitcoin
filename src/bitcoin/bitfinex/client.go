@@ -86,6 +86,6 @@ func (client *Client) SetDryRun(dryRun bool) {
 
 func (client *Client) Fee() (fee float64, err error) {
   // Fee is not (yet?) available through API on Bitfinex.
-  fee = 0.0012
+  fee = 0.0015
   return
 }
