@@ -23,13 +23,15 @@ func (client *Client) UserTransactions() (
   if err != nil {
     return
   }
-  for _, myTrade := range resp {
+  n := len(resp)
+  transactions = make([]bitcoin.UserTransaction, n)
+  for i, myTrade := range resp {
     var transaction bitcoin.UserTransaction
     transaction, err = parseMyTrade(myTrade)
     if err != nil {
       return
     }
-    transactions = append(transactions, transaction)
+    transactions[n-1-i] = transaction
   }
   return
 }
