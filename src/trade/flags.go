@@ -16,6 +16,7 @@ var flagBtcRatio float64
 var flagFeeRound bool
 var flagOffsetUsd float64
 var flagOffsetBtc float64
+var flagFeeAlwaysUsd bool
 
 func initFlags() {
   flag.BoolVar(&flagTest, "test", false, "Don't change any orders. Just output.")
@@ -36,6 +37,10 @@ func initFlags() {
   flag.Float64Var(
     &flagOffsetBtc, "offset_btc", 0,
     "Offset the BTC balance before determining which orders to make.")
+  flag.BoolVar(
+    &flagFeeAlwaysUsd, "fee_always_usd", false,
+    "Whether the fee is always paid from USD. " +
+    "Otherwise it's paid from BTC of BTC are bought.")
   flag.Parse()
 
   if flagApiKey == "" || flagApiSecret == "" {
