@@ -25,11 +25,16 @@ func (orderMap OrderMap) add(order *StatusOrder) {
 func computeBuyOrder(A, b, R, F, s float64) (price, amount float64) {
   previousRate := R * A / b
   lowRate := previousRate / s
-  var lowX float64
+  var factor float64
   if flagFeeAlwaysUsd {
-    lowX = (R*A - b*lowRate) / (1 + R + R*F)
+    factor = 1 + R + R*F
   } else {
-    lowX = (R*A - b*lowRate) / (1 + R - F)
+    factor = 1 + R - F
+  }
+  lowX := (R*A - b*lowRate) / factor
+  if lowX / lowRate < flagMinAmount {
+    lowRate = R * A / (b + factor * flagMinAmount)
+    lowX = lowRate * flagMinAmount
   }
   if flagFeeRound {
     lowX = feeRound(lowX, F)
@@ -56,6 +61,10 @@ func computeSellOrder(A, b, R, F, s float64) (price, amount float64) {
   previousRate := R * A / b
   highRate := previousRate * s
   highX := (b*highRate - R*A) / (1 + R - R * F)
+  if highX / highRate < flagMinAmount {
+    highRate = R * A / (b - (1 + R - R * F) * flagMinAmount)
+    highX = highRate * flagMinAmount
+  }
   if flagFeeRound {
     highX = feeRound(highX, F)
     highRate = (((A + highX*(1-F)) * R) + highX) / b
