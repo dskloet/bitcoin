@@ -46,7 +46,7 @@ func (order Order) verb() string {
 
 func (order Order) String() string {
   return fmt.Sprintf(
-    "%v %.8f at %.2f for %.2f",
+    "%v %.8f at %.5f for %.8f",
     order.verb(),
     order.Amount,
     order.Price,
