@@ -55,7 +55,7 @@ func placeBuyOrders(A, b, R, F, s float64, orderMap OrderMap) (err error) {
 func computeSellOrder(A, b, R, F, s float64) (price, amount float64) {
   previousRate := R * A / b
   highRate := previousRate * s
-  highX := (b*highRate - R*A) / (1 + R + F) * (1 + F)
+  highX := (b*highRate - R*A) / (1 + R - R * F)
   if flagFeeRound {
     highX = feeRound(highX, F)
     highRate = (((A + highX*(1-F)) * R) + highX) / b
