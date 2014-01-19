@@ -2,6 +2,7 @@ package bitcoin
 
 import (
   "fmt"
+  "strconv"
 )
 
 type OrderId string
@@ -18,12 +19,27 @@ type Order struct {
   Price, Amount float64
 }
 
+func MakeOrder(orderType OrderType, price, amount float64) Order {
+  return Order{
+    Type: orderType,
+    Price: round(price, 5),
+    Amount: round(amount, 8),
+  }
+}
+
+func round(value float64, places int) (result float64) {
+  format := fmt.Sprintf("%%.%df", places)
+  str := fmt.Sprintf(format, value)
+  result, _ = strconv.ParseFloat(str, 64)
+  return
+}
+
 func BuyOrder(price, amount float64) Order {
-  return Order{Type: BUY_ORDER, Price: price, Amount: amount}
+  return MakeOrder(BUY_ORDER, price, amount)
 }
 
 func SellOrder(price, amount float64) Order {
-  return Order{Type: SELL_ORDER, Price: price, Amount: amount}
+  return MakeOrder(SELL_ORDER, price, amount)
 }
 
 func (order Order) Cancel(client Client) error {
