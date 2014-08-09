@@ -13,6 +13,6 @@ func (client *Client) CancelOrder(id bitcoin.OrderId) (err error) {
     fmt.Printf("Cancel order %v\n", id)
   }
   params := client.createParams()
-  params["id"] = []string{string(id)}
+  params.Set("id", string(id))
   return request(API_CANCEL_ORDER, params)
 }

@@ -2,9 +2,11 @@ package main
 
 import (
   "bitcoin"
+  "bitcoin/bitfinex"
   "bitcoin/bitstamp"
   "fmt"
   "math"
+  "os"
 )
 
 type OrderMap map[string]*StatusOrder
@@ -23,8 +25,21 @@ func (orderMap OrderMap) add(order *StatusOrder) {
 func computeBuyOrder(A, b, R, F, s float64) (price, amount float64) {
   previousRate := R * A / b
   lowRate := previousRate / s
-  lowX := feeRound((R*A-b*lowRate)/(1+R+R*F), F)
-  lowRate = (((A - lowX*(1+F)) * R) - lowX) / b
+  var factor float64
+  if flagFeeAlwaysUsd {
+    factor = 1 + R + R*F
+  } else {
+    factor = 1 + R - F
+  }
+  lowX := (R*A - b*lowRate) / factor
+  if lowX / lowRate < flagMinAmount {
+    lowRate = R * A / (b + factor * flagMinAmount)
+    lowX = lowRate * flagMinAmount
+  }
+  if flagFeeRound {
+    lowX = feeRound(lowX, F)
+    lowRate = (((A - lowX*(1+F)) * R) - lowX) / b
+  }
   buy := lowX / lowRate
   price, amount = lowRate, buy
   return
@@ -45,8 +60,15 @@ func placeBuyOrders(A, b, R, F, s float64, orderMap OrderMap) (err error) {
 func computeSellOrder(A, b, R, F, s float64) (price, amount float64) {
   previousRate := R * A / b
   highRate := previousRate * s
-  highX := feeRound((b*highRate-R*A)/(1+R+R*F)*(1+F), F)
-  highRate = (((A + highX*(1-F)) * R) + highX) / b
+  highX := (b*highRate - R*A) / (1 + R - R * F)
+  if highX / highRate < flagMinAmount {
+    highRate = R * A / (b - (1 + R - R * F) * flagMinAmount)
+    highX = highRate * flagMinAmount
+  }
+  if flagFeeRound {
+    highX = feeRound(highX, F)
+    highRate = (((A + highX*(1-F)) * R) + highX) / b
+  }
   sell := highX / highRate
   price, amount = highRate, sell
   return
@@ -72,7 +94,14 @@ func feeRound(x, feeRate float64) float64 {
 func main() {
   initFlags()
   var client bitcoin.Client
-  client = bitstamp.NewClient(flagClientId, flagApiKey, flagApiSecret)
+  if flagExchange == "bitstamp" {
+    client = bitstamp.NewClient(flagClientId, flagApiKey, flagApiSecret)
+  } else if flagExchange == "bitfinex" {
+    client = bitfinex.NewClient(flagApiKey, flagApiSecret)
+  } else {
+    fmt.Printf("Unknown exchange: %v\n", flagExchange)
+    os.Exit(1)
+  }
   client.SetDryRun(flagTest)
 
   openOrders, err := client.OpenOrders()
@@ -105,6 +134,8 @@ func main() {
     fmt.Printf("Error balance: %v\n", err)
     return
   }
+  A += flagOffsetUsd
+  b += flagOffsetBtc
   R := flagBtcRatio / (1 - flagBtcRatio)
   F, err := client.Fee()
   if err != nil {
@@ -121,11 +152,10 @@ func main() {
 
   previousRate := R * A / b
 
-  fmt.Printf("Creating new bitstamp orders.\n")
+  fmt.Printf("Rate = %.2f\n", previousRate)
   fmt.Printf("USD = %v\n", A)
   fmt.Printf("BTC = %v\n", b)
   fmt.Printf("Fee = %v\n", F)
-  fmt.Printf("Rate = %.2f\n", previousRate)
 
   placeBuyOrders(A, b, R, F, s, orderMap)
   placeSellOrders(A, b, R, F, s, orderMap)

@@ -36,6 +36,7 @@ func initFlags() (flags Flags) {
     (*string)(&flags.id), "id", "", "Order ID for cancel_order command")
   flag.Float64Var(&flags.price, "price", 0, "Price for buy/sell orders")
   flag.Float64Var(&flags.amount, "amount", 0, "Amount for buy/sell orders")
+
   flag.Parse()
   return
 }

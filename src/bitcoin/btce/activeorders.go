@@ -19,7 +19,7 @@ type activeOrderResponse struct {
 
 func (client *Client) OpenOrders() (orders bitcoin.OrderList, err error) {
   params := client.createParams()
-  params["pair"] = []string{"btc_usd"}
+  params.Set("pair", "btc_usd")
   var resp activeOrdersResponse
   err = client.postRequest(API_ACTIVE_ORDERS, params, &resp)
   if err != nil {

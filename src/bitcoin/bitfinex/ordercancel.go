@@ -1,9 +1,10 @@
-package btce
+package bitfinex
 
 import (
   "bitcoin"
   "errors"
   "fmt"
+  "strconv"
 )
 
 func (client *Client) CancelOrder(id bitcoin.OrderId) (err error) {
@@ -14,14 +15,17 @@ func (client *Client) CancelOrder(id bitcoin.OrderId) (err error) {
     fmt.Printf("Cancel order %v\n", id)
   }
   params := client.createParams()
-  params.Set("order_id", string(id))
-  var resp tradeResponse
-  err = client.postRequest(API_CANCEL_ORDER, params, &resp)
+  params["order_id"], err = strconv.ParseInt(string(id), 10, 64)
   if err != nil {
     return
   }
-  if resp.Success != 1 {
-    err = errors.New(resp.Error)
+  var resp map[string]interface{}
+  err = client.postRequest(API_ORDER_CANCEL, params, &resp)
+  if err != nil {
+    return
+  }
+  if message, ok := resp["message"]; ok {
+    err = errors.New(message.(string))
   }
   return
 }

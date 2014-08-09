@@ -41,9 +41,9 @@ func (client *Client) createParams() (params url.Values) {
   mac.Write([]byte(message))
 
   params = make(url.Values)
-  params["key"] = []string{client.apiKey}
-  params["nonce"] = []string{nonce}
-  params["signature"] = []string{fmt.Sprintf("%X", mac.Sum(nil))}
+  params.Set("key", client.apiKey)
+  params.Set("nonce", nonce)
+  params.Set("signature", fmt.Sprintf("%X", mac.Sum(nil)))
   return
 }
 

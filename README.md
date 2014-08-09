@@ -1,4 +1,4 @@
 Bitcoin libraries for Go
 ========
 
-Bitstamp and BTC-e API client library, command line utility and trading bot written in Go (golang).
+Bitstamp, BTC-e and Bitfinex API client libraries, command line utility and trading bot written in Go (golang).
