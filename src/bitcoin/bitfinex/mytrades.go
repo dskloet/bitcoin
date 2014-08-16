@@ -39,17 +39,18 @@ func (client *Client) UserTransactions() (
 func parseMyTrade(trade myTradeResponse) (
   transaction bitcoin.UserTransaction, err error) {
 
-  transaction.Price, err = strconv.ParseFloat(trade.Price, 64)
+  price, err := strconv.ParseFloat(trade.Price, 64)
   if err != nil {
     return
   }
-  transaction.Amount, err = strconv.ParseFloat(trade.Amount, 64)
+  transaction.BtcAmount, err = strconv.ParseFloat(trade.Amount, 64)
   if err != nil {
     return
   }
   if trade.Type == "Sell" {
-    transaction.Amount *= -1
+    transaction.BtcAmount *= -1
   }
+  transaction.CurrencyAmount = -price * transaction.BtcAmount
   timestamp, err := strconv.ParseFloat(trade.Timestamp, 64)
   if err != nil {
     return

@@ -57,15 +57,18 @@ func parseUserTransaction(unparsed unparsedUserTransaction) (
   if err != nil {
     return
   }
+  if btc == -0.0 {
+    btc = 0.0
+  }
   fee, err := strconv.ParseFloat(unparsed.Fee, 64)
   if err != nil {
     return
   }
   transaction = bitcoin.UserTransaction{
-    Datetime: datetime,
-    Price:    -usd / btc,
-    Amount:   btc,
-    Fee:      fee,
+    Datetime:       datetime,
+    CurrencyAmount: usd,
+    BtcAmount:      btc,
+    Fee:            fee,
   }
   return
 }

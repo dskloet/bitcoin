@@ -41,10 +41,10 @@ func (client *Client) UserTransactions() (
       amount = -amount
     }
     transactions = append(transactions, bitcoin.UserTransaction{
-      Datetime: datetime,
-      Price:    trade.Rate,
-      Amount:   amount,
-      Fee:      trade.Rate * trade.Amount * fee,
+      Datetime:       datetime,
+      CurrencyAmount: -trade.Rate * amount,
+      BtcAmount:      amount,
+      Fee:            trade.Rate * trade.Amount * fee,
     })
   }
   return
