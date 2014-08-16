@@ -13,6 +13,13 @@ func balance() {
   }
   fmt.Printf("USD: %.2f\n", usd)
 
+  eur, err := client.Balance(bitcoin.EUR)
+  if err != nil {
+    fmt.Printf("Error: %v\n", err)
+    return
+  }
+  fmt.Printf("EUR: %.2f\n", eur)
+
   btc, err := client.Balance(bitcoin.BTC)
   if err != nil {
     fmt.Printf("Error: %v\n", err)

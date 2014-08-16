@@ -1,6 +1,8 @@
 package kraken
 
 const (
-  API_URL    = "https://api.kraken.com/0/"
-  API_TICKER = "public/Ticker?pair="
+  API_URL     = "https://api.kraken.com"
+  API_TICKER  = "/0/public/Ticker?pair="
+  API_BALANCE = "/0/private/Balance"
+  API_LEDGERS = "/0/private/Ledgers"
 )

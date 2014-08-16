@@ -35,7 +35,9 @@ func main() {
       flags.apiKey,
       flags.apiSecret)
   } else if flags.exchange == "kraken" {
-    client = kraken.NewClient()
+    client = kraken.NewClient(
+      flags.apiKey,
+      flags.apiSecret)
   }
   client.SetDryRun(flags.dryRun)
 

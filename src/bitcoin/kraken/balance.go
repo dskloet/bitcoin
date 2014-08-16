@@ -2,27 +2,53 @@ package kraken
 
 import (
   "bitcoin"
-  "fmt"
+  "strconv"
+  "time"
 )
 
 type balanceResponse struct {
   Error  []string
-  Result map[string]float64
+  Result map[string]string
 }
 
-func (client *Client) Balance(
-  currency bitcoin.Currency) (balance float64, err error) {
+var balanceCache balanceResponse
+var balanceCacheTime time.Time
+
+const (
+  BALANCES_CACHE_TIMEOUT = 5 * time.Second
+)
+
+func (client *Client) Balance(currency bitcoin.Currency) (
+    balance float64, err error) {
+  resp, err := client.getBalanceResponse()
+  if err != nil {
+    return
+  }
+
   if currency == bitcoin.BTC {
+    balance, _ = strconv.ParseFloat(resp.Result["XXBT"], 64)
+  } else if currency == bitcoin.USD {
+    balance, _ = strconv.ParseFloat(resp.Result["ZUSD"], 64)
+  } else if currency == bitcoin.EUR {
+    balance, _ = strconv.ParseFloat(resp.Result["ZEUR"], 64)
+  }
+  return
+}
+
+func (client *Client) getBalanceResponse() (resp balanceResponse, err error) {
+  now := time.Now()
+  if now.Sub(balanceCacheTime) < BALANCES_CACHE_TIMEOUT {
+    resp = balanceCache
     return
   }
 
   params := client.createParams()
-  var resp balanceResponse
   err = client.postRequest(API_BALANCE, params, &resp)
   if err != nil {
     return
   }
-  fmt.Printf("resp = %v\n", resp)
-  balance = resp.Result["USD"]
+
+  balanceCache = resp
+  balanceCacheTime = now
   return
 }

@@ -4,6 +4,7 @@ type Currency string
 
 const (
   USD = "usd"
+  EUR = "eur"
   BTC = "btc"
 )
 
