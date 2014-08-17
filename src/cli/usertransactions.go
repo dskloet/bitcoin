@@ -15,7 +15,7 @@ func userTransactions() {
     if transaction.BtcAmount != 0 {
       price = -transaction.CurrencyAmount / transaction.BtcAmount
     }
-    fmt.Printf("%v\t%12.8f\t%14.8f\t%9.4f\t%8.5f\t%12.8f\n",
+    fmt.Printf("%v\t%12.8f\t%10.4f\t%10.4f\t%7.4f\t%11.8f\n",
       transaction.Datetime.Format("2006-01-02 15:04:05"),
       transaction.BtcAmount,
       transaction.CurrencyAmount,
