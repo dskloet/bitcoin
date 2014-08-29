@@ -2,7 +2,6 @@ package bitstamp
 
 import (
   "bitcoin"
-  "errors"
   "time"
 )
 
@@ -51,7 +50,6 @@ func (client *Client) Balance(currency bitcoin.Currency) (
   balance float64, err error) {
 
   if currency != bitcoin.USD && currency != bitcoin.BTC {
-    err = errors.New("Unsupported currency")
     return
   }
   balances, err := client.BitstampBalance()
