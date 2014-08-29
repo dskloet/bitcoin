@@ -73,14 +73,7 @@ func (client *Client) postRequest(
 }
 
 func (client *Client) createParams() (params url.Values) {
-  //client.nonce++
-  //message := nonce + client.clientId + client.apiKey
-  //mac := hmac.New(sha256.New, []byte(client.apiSecret))
-  //mac.Write([]byte(message))
-
   params = make(url.Values)
-  //params.Set("key", client.apiKey)
-  //params.Set("signature", fmt.Sprintf("%X", mac.Sum(nil)))
   return
 }
 
@@ -92,11 +85,6 @@ func (client Client) OrderBook() (
 
 func (client Client) Transactions() (
   transactions []bitcoin.Transaction, err error) {
-  err = errors.New("Not implemented")
-  return
-}
-
-func (client *Client) Fee() (fee float64, err error) {
   err = errors.New("Not implemented")
   return
 }
