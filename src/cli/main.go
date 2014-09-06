@@ -44,16 +44,22 @@ func main() {
   switch flags.c {
   case "last":
     last()
+  case "ob": fallthrough
   case "order_book":
     orderBook()
+  case "t": fallthrough
   case "transactions":
     transactions()
+  case "b": fallthrough
   case "balance":
     balance()
+  case "ut": fallthrough
   case "user_transactions":
     userTransactions()
+  case "oo": fallthrough
   case "open_orders":
     openOrders()
+  case "cancel": fallthrough
   case "cancel_order":
     cancelOrder()
   case "buy":
