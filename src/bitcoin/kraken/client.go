@@ -10,6 +10,7 @@ import (
   "fmt"
   "net/http"
   "net/url"
+  "reflect"
   "strings"
   "time"
 )
@@ -19,6 +20,7 @@ type Client struct {
   apiKey    string
   apiSecret string
   nonce     int64
+  dryRun    bool
 }
 
 func NewClient(apiKey, apiSecret string) *Client {
@@ -31,6 +33,7 @@ func NewClient(apiKey, apiSecret string) *Client {
 }
 
 func (client *Client) SetDryRun(dryRun bool) {
+  client.dryRun = dryRun
 }
 
 func (client *Client) getRequest(path string, result interface{}) (err error) {
@@ -69,6 +72,16 @@ func (client *Client) postRequest(
     return
   }
   err = bitcoin.JsonParse(resp.Body, result)
+  if err != nil {
+    return
+  }
+
+  resultValue := reflect.ValueOf(result)
+  error := (resultValue.Elem().FieldByName("Error").Interface()).([]string)
+  if len(error) > 0 {
+    err = errors.New(strings.Join(error, "; "))
+  }
+
   return
 }
 
@@ -85,16 +98,6 @@ func (client Client) OrderBook() (
 
 func (client Client) Transactions() (
   transactions []bitcoin.Transaction, err error) {
-  err = errors.New("Not implemented")
-  return
-}
-
-func (client *Client) Buy(price, amount float64) (err error) {
-  err = errors.New("Not implemented")
-  return
-}
-
-func (client *Client) Sell(price, amount float64) (err error) {
   err = errors.New("Not implemented")
   return
 }
