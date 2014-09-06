@@ -99,11 +99,6 @@ func (client *Client) Sell(price, amount float64) (err error) {
   return
 }
 
-func (client *Client) OpenOrders() (orders bitcoin.OrderList, err error) {
-  err = errors.New("Not implemented")
-  return
-}
-
 func (client *Client) CancelOrder(id bitcoin.OrderId) (err error) {
   err = errors.New("Not implemented")
   return

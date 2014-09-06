@@ -6,4 +6,5 @@ const (
   API_BALANCE      = "/0/private/Balance"
   API_LEDGERS      = "/0/private/Ledgers"
   API_TRADE_VOLUME = "/0/private/TradeVolume"
+  API_OPEN_ORDERS  = "/0/private/OpenOrders"
 )
