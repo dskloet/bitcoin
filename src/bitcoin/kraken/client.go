@@ -101,8 +101,3 @@ func (client Client) Transactions() (
   err = errors.New("Not implemented")
   return
 }
-
-func (client *Client) CancelOrder(id bitcoin.OrderId) (err error) {
-  err = errors.New("Not implemented")
-  return
-}

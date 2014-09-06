@@ -8,4 +8,5 @@ const (
   API_TRADE_VOLUME = "/0/private/TradeVolume"
   API_OPEN_ORDERS  = "/0/private/OpenOrders"
   API_ADD_ORDER    = "/0/private/AddOrder"
+  API_CANCEL_ORDER = "/0/private/CancelOrder"
 )
