@@ -44,11 +44,11 @@ func initFlags() {
   flag.BoolVar(
     &flagFeeAlwaysUsd, "fee_always_usd", false,
     "Whether the fee is always paid from USD. " +
-    "Otherwise it's paid from BTC of BTC are bought.")
+    "Otherwise it's paid from BTC if BTC are bought.")
   flag.Parse()
 
   if flagApiKey == "" || flagApiSecret == "" {
-    fmt.Printf("--api_key and --api_secret be specified\n")
+    fmt.Printf("--api_key and --api_secret must be specified\n")
     os.Exit(1)
   }
 }
