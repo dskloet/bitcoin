@@ -4,6 +4,7 @@ import (
   "bitcoin"
   "bitcoin/bitfinex"
   "bitcoin/bitstamp"
+  "bitcoin/kraken"
   "fmt"
   "math"
   "os"
@@ -98,6 +99,8 @@ func main() {
     client = bitstamp.NewClient(flagClientId, flagApiKey, flagApiSecret)
   } else if flagExchange == "bitfinex" {
     client = bitfinex.NewClient(flagApiKey, flagApiSecret)
+  } else if flagExchange == "kraken" {
+    client = kraken.NewClient(flagApiKey, flagApiSecret)
   } else {
     fmt.Printf("Unknown exchange: %v\n", flagExchange)
     os.Exit(1)
