@@ -3,6 +3,7 @@ package kraken
 import (
   "bitcoin"
   "strconv"
+  "strings"
 )
 
 type orderDescription struct {
@@ -16,6 +17,7 @@ type orderResult struct {
   Status string
   Descr orderDescription
   Vol string
+  Oflags string
 }
 
 type openOrdersResult struct {
@@ -47,6 +49,9 @@ func (client *Client) OpenOrders() (orders bitcoin.OrderList, err error) {
     amount, err = strconv.ParseFloat(order.Vol, 64)
     if err != nil {
       return
+    }
+    if strings.Contains(order.Oflags, "viqc") {
+      amount = amount / price
     }
     if order.Descr.Type == "buy" {
       o := bitcoin.BuyOrder(price, amount)
