@@ -27,9 +27,7 @@ func (client *Client) Balance(currency bitcoin.Currency) (
 
   if currency == bitcoin.BTC {
     balance, _ = strconv.ParseFloat(resp.Result["XXBT"], 64)
-  } else if currency == bitcoin.USD {
-    balance, _ = strconv.ParseFloat(resp.Result["ZUSD"], 64)
-  } else if currency == bitcoin.EUR {
+  } else if currency == bitcoin.FIAT {
     balance, _ = strconv.ParseFloat(resp.Result["ZEUR"], 64)
   }
   return

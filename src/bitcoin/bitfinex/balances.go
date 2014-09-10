@@ -33,7 +33,7 @@ func (client *Client) Balance(currency bitcoin.Currency) (
   }
   for _, entry := range response {
     if entry.Type == "exchange" {
-      if currency == bitcoin.USD && entry.Currency == "usd" {
+      if currency == bitcoin.FIAT && entry.Currency == "usd" {
         balance, err = strconv.ParseFloat(entry.Amount, 64)
         return
       }

@@ -47,7 +47,7 @@ func (client *Client) Balance(
     return
   }
 
-  if currency == bitcoin.USD {
+  if currency == bitcoin.FIAT {
     balace = info.Return.Funds.Usd
   } else if currency == bitcoin.BTC {
     balace = info.Return.Funds.Btc

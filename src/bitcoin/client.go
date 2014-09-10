@@ -3,9 +3,8 @@ package bitcoin
 type Currency string
 
 const (
-  USD = "usd"
-  EUR = "eur"
-  BTC = "btc"
+  FIAT = "fiat"
+  BTC  = "btc"
 )
 
 // A client for trading one specific currency (e.g. BTC) on one particular

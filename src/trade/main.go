@@ -127,7 +127,7 @@ func main() {
     orderMap[order.String()] = &StatusOrder{order, ORDER_REMOVE}
   }
 
-  A, err := client.Balance(bitcoin.USD)
+  A, err := client.Balance(bitcoin.FIAT)
   if err != nil {
     fmt.Printf("Error balance: %v\n", err)
     return
@@ -156,7 +156,7 @@ func main() {
   previousRate := R * A / b
 
   fmt.Printf("Rate = %.2f\n", previousRate)
-  fmt.Printf("USD = %v\n", A)
+  fmt.Printf("Fiat = %v\n", A)
   fmt.Printf("BTC = %v\n", b)
   fmt.Printf("Fee = %v\n", F)
 
