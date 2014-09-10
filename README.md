@@ -1,4 +1,8 @@
-Bitcoin libraries for Go
+Bitcoin Exchange libraries for Go
 ========
 
-Bitstamp, BTC-e and Bitfinex API client libraries, command line utility and trading bot written in Go (golang).
+Bitstamp, Kraken, Bitfinex and BTC-e API client libraries, command line utility and trading bot written in Go (golang).
+
+If you have questions, feel free to open an issue in github.
+
+https://github.com/dskloet/bitcoin
