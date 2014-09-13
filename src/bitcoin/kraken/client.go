@@ -1,7 +1,7 @@
 package kraken
 
 import (
-  "bitcoin"
+  "github.com/dskloet/bitcoin/src/bitcoin"
   "crypto/hmac"
   "crypto/sha256"
   "crypto/sha512"

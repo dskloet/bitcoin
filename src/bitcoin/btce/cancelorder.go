@@ -1,7 +1,7 @@
 package btce
 
 import (
-  "bitcoin"
+  "github.com/dskloet/bitcoin/src/bitcoin"
   "errors"
   "fmt"
 )

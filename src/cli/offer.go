@@ -1,7 +1,7 @@
 package main
 
 import (
-  "bitcoin/bitfinex"
+  "github.com/dskloet/bitcoin/src/bitcoin/bitfinex"
   "fmt"
 )
 

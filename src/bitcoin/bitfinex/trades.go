@@ -1,7 +1,7 @@
 package bitfinex
 
 import (
-  "bitcoin"
+  "github.com/dskloet/bitcoin/src/bitcoin"
   "fmt"
   "strconv"
   "time"

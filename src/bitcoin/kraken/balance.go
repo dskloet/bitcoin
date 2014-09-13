@@ -1,7 +1,7 @@
 package kraken
 
 import (
-  "bitcoin"
+  "github.com/dskloet/bitcoin/src/bitcoin"
   "strconv"
   "time"
 )

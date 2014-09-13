@@ -1,11 +1,11 @@
 package main
 
 import (
-  "bitcoin"
-  "bitcoin/bitfinex"
-  "bitcoin/bitstamp"
-  "bitcoin/btce"
-  "bitcoin/kraken"
+  "github.com/dskloet/bitcoin/src/bitcoin"
+  "github.com/dskloet/bitcoin/src/bitcoin/bitfinex"
+  "github.com/dskloet/bitcoin/src/bitcoin/bitstamp"
+  "github.com/dskloet/bitcoin/src/bitcoin/btce"
+  "github.com/dskloet/bitcoin/src/bitcoin/kraken"
   "fmt"
   "os"
 )
