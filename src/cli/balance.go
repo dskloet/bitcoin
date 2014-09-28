@@ -11,7 +11,7 @@ func balance() {
     fmt.Printf("Error: %v\n", err)
     return
   }
-  fmt.Printf("Fiat: %.2f\n", fiat)
+  fmt.Printf("Fiat: %.5f\n", fiat)
 
   btc, err := client.Balance(bitcoin.BTC)
   if err != nil {
